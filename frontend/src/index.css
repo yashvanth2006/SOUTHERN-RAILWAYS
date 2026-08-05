@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  color: #1f2937;
+  background-color: #f5f7fa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #f5f7fa 0%, #eef4f9 100%);
+  color: #1f2937;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.rail-page {
+  min-height: 100vh;
+  background: transparent;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .rail-page {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .rail-page {
+    padding: 2rem;
+  }
+}
+
+.rail-card {
+  border: 1px solid #d6dee8;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(11, 60, 93, 0.08);
+}
+
+.rail-panel {
+  border: 1px solid #d6dee8;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbfe 100%);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.rail-input {
+  width: 100%;
+  border: 1px solid #d6dee8;
+  border-radius: 12px;
+  padding: 0.8rem 0.95rem;
+  background: #ffffff;
+  color: #1f2937;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.rail-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+}
+
+.rail-input-with-icon {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  padding-right: 0.95rem;
+  padding-left: 2.875rem;
+}
+
+.rail-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #6b7280;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.rail-input-icon > svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+.rail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.rail-page-title {
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 800;
+  color: #0b3c5d;
+  line-height: 1.2;
+}
+
+.rail-page-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+.rail-status-widget {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  border: 1px solid #d6dee8;
+  border-left-width: 4px;
+  border-radius: 16px;
+  padding: 1rem 1.05rem;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(11, 60, 93, 0.06);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.rail-status-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(11, 60, 93, 0.1);
+}
+
+.rail-status-widget.valid {
+  border-left-color: #2563eb;
+}
+
+.rail-status-widget.warning {
+  border-left-color: #c8102e;
+}
+
+.rail-status-widget.danger {
+  border-left-color: #c8102e;
+}
+
+.rail-status-widget.info {
+  border-left-color: #0b3c5d;
+}
+
+.rail-status-icon {
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.rail-status-icon.valid {
+  background: #e8f1f8;
+  color: #2563eb;
+}
+
+.rail-status-icon.warning {
+  background: #fff7e8;
+  color: #c8102e;
+}
+
+.rail-status-icon.danger {
+  background: #fce7e9;
+  color: #c8102e;
+}
+
+.rail-status-icon.info {
+  background: #e8f1f8;
+  color: #0b3c5d;
+}
+
+.rail-feature-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  border: 1px solid #d6dee8;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbfe 100%);
+  padding: 1.15rem;
+  box-shadow: 0 14px 34px rgba(11, 60, 93, 0.07);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.rail-feature-card:hover {
+  transform: translateY(-3px);
+  border-color: #2563eb;
+  box-shadow: 0 18px 42px rgba(11, 60, 93, 0.12);
+}
+
+.rail-status-valid {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.rail-status-warning {
+  background: #fff7e8;
+  color: #c8102e;
+}
+
+.rail-status-danger {
+  background: #fce7e9;
+  color: #c8102e;
+}
+
+.rail-status-info {
+  background: #e8f1f8;
+  color: #0b3c5d;
+}

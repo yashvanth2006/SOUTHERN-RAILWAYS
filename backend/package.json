@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "dev:local": "NODE_ENV=development nodemon server.js",
+    "start": "node server.js",
+    "start:local": "NODE_ENV=development node server.js",
+    "seed:local": "NODE_ENV=development node config/seeder.js",
+    "seed:sse": "node config/seedSSETRD.js",
+    "validate": "node config/validateDatabase.js"
+  },
+  "type": "module",
+  "keywords": [
+    "railway",
+    "management",
+    "tower-wagon",
+    "mern"
+  ],
+  "author": "Sri Shakthi CSE Department",
+  "license": "ISC",
+  "description": "Tower Wagon Driver Management System - Backend API",
+  "dependencies": {
+    "axios": "^1.13.4",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.1",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
