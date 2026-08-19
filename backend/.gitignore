@@ -16,7 +16,7 @@ config/seedSSETRD.js
 
 # Development database files
 data/
-scripts/backup.js
+scripts/
 scratch_reset_adee.js
 
 
