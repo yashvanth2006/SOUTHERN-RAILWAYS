@@ -36,7 +36,7 @@ export default function Layout() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 pb-12">
           
           {/* Mobile Top Bar (Only visible on small screens) */}
           <header className="lg:hidden sticky top-0 flex items-center justify-between h-16 px-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-30">

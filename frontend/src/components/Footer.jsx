@@ -98,7 +98,7 @@ export default function Footer() {
 
   return (
     <footer 
-      className="relative z-10 mt-12 bg-cover bg-bottom bg-no-repeat text-white overflow-hidden border-t-4 border-[#1a73e8]"
+      className="relative z-10 bg-cover bg-bottom bg-no-repeat text-white overflow-hidden border-t-4 border-[#1a73e8]"
       style={{ backgroundImage: "url('/Footerbg.png')", backgroundColor: "#0b3c5d" }}
     >
       {/* Very light overlay just to ensure white text readability without darkening the image too much */}
