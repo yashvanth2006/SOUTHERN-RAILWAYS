@@ -24,7 +24,7 @@ const seedDistrictDepots = async () => {
       const districtDoc = await District.findOneAndUpdate(
         { name: districtName },
         { $setOnInsert: { name: districtName } },
-        { upsert: true, new: true }
+        { upsert: true, returnDocument: 'after' }
       );
 
       for (const depotName of depots) {

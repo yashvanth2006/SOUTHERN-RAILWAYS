@@ -46,7 +46,24 @@ export const LR_DEPOTS = {
   Trivandrum: [],
   Trichy: [],
   Chennai: [],
-  Madurai: []
+  Madurai: [
+    "MPA",
+    "DG",
+    "MDU",
+    "VPT",
+    "CVP",
+    "TEN",
+    "MNM",
+    "KKDI",
+    "SCT",
+    "PUU",
+    "RMD",
+    "TN",
+    "RJPM",
+    "NZT",
+    "PLNI",
+    "ASD"
+  ]
 };
 
 export const getLRDepotsForDistrict = (districtName) => {

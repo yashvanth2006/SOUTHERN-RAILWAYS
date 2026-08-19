@@ -77,7 +77,7 @@ export const updateBioData = async (req, res) => {
       dateOfAppointment,
       dateOfEntryAsTWD
     },
-    { new: true, upsert: true }
+    { returnDocument: 'after', upsert: true }
   );
 
   res.json(updated);
@@ -98,7 +98,7 @@ export const updateTraining = async (req, res) => {
   const updated = await DriverProfile.findOneAndUpdate(
     { userId: req.scope.userId },
     { $set: { trainings } },
-    { new: true, upsert: true }
+    { returnDocument: 'after', upsert: true }
   );
 
   res.json({
@@ -159,7 +159,7 @@ export const updateLR = async (req, res) => {
       },
       {},
       {
-        new: true,
+        returnDocument: 'after',
         upsert: true
       }
     );

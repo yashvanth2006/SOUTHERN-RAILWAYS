@@ -20,12 +20,6 @@ const identityProxy = createProxyMiddleware({
   changeOrigin: true,
 });
 
-const monolithProxy = createProxyMiddleware({
-  target: process.env.MONOLITH_URL || 'http://localhost:3001',
-  changeOrigin: true,
-  logLevel: 'debug',
-});
-
 const operationsProxy = createProxyMiddleware({
   target: process.env.OPERATIONS_SERVICE_URL || 'http://localhost:3003',
   changeOrigin: true,
@@ -91,5 +85,4 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);
-  console.log(`Proxying traffic to monolith at ${process.env.MONOLITH_URL || 'http://localhost:3001'}`);
 });

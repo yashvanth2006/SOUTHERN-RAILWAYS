@@ -6,13 +6,12 @@
   "private": true,
   "scripts": {
     "dev:frontend": "npm run dev --prefix frontend",
-    "dev:backend-monolith": "npm run dev --prefix backend",
     "dev:gateway": "npm run dev --prefix backend/gateway",
     "dev:identity": "npm run dev --prefix backend/services/identity-service",
     "dev:operations": "npm run dev --prefix backend/services/operations-service",
     "dev:compliance": "npm run dev --prefix backend/services/compliance-service",
     "dev:reporting": "npm run dev --prefix backend/services/reporting-service",
-    "dev:microservices": "concurrently \"npm run dev:gateway\" \"npm run dev:identity\" \"npm run dev:operations\" \"npm run dev:compliance\" \"npm run dev:reporting\" \"npm run dev:backend-monolith\"",
+    "dev:microservices": "concurrently \"npm run dev:gateway\" \"npm run dev:identity\" \"npm run dev:operations\" \"npm run dev:compliance\" \"npm run dev:reporting\"",
     "dev": "concurrently \"npm run dev:microservices\" \"npm run dev:frontend\""
   },
   "keywords": [],

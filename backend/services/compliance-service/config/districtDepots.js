@@ -25,49 +25,27 @@ export const DISTRICT_DEPOTS = {
     "NIL",
     "CAN"
   ],
-  Trivandrum: [
-    "TVC",
-    "QLN",
-    "KTYM",
-    "ERN",
-    "ERS",
-    "TCR",
-    "ALLP",
-    "CGY",
-    "TRVL",
-    "CNGR",
-    "KYJ",
-    "NCJ"
-  ],
+  Trivandrum: [],
   Trichy: [],
-  Chennai: [
-    "MAS",
-    "MS",
-    "TBM",
-    "CGL",
-    "AJJ",
-    "TRL",
-    "AVD",
-    "VLCY",
-    "PER",
-    "RPM",
-    "ENR",
-    "GPD"
-  ],
+  Chennai: [],
   Madurai: [
-    "MDU",
-    "DG",
-    "TEN",
-    "VPT",
-    "MNM",
-    "SCT",
-    "TN",
-    "RJPM",
-    "KKDI",
-    "PLNI",
-    "TSI",
-    "CVP"
-  ]
+  "MPA",
+  "DG",
+  "MDU",
+  "VPT",
+  "CVP",
+  "TEN",
+  "MNM",
+  "KKDI",
+  "SCT",
+  "PUU",
+  "RMD",
+  "TN",
+  "RJPM",
+  "NZT",
+  "PLNI",
+  "ASD"
+],
 };
 
 export const DISTRICT_NAMES = Object.keys(DISTRICT_DEPOTS);

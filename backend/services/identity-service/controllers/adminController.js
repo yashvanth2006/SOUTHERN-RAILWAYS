@@ -309,7 +309,7 @@ export const adminRegisterUserV2 = async (req, res) => {
       const districtDoc = await District.findOneAndUpdate(
         { name: userDistrictName },
         { $setOnInsert: { name: userDistrictName } },
-        { upsert: true, new: true }
+        { upsert: true, returnDocument: 'after' }
       );
       userDistrictId = districtDoc._id;
       userDepotName = null;
@@ -938,7 +938,7 @@ export const updateUser = async (req, res) => {
         await DriverProfile.findOneAndUpdate(
           { userId },
           { $set: profileUpdate },
-          { upsert: true, new: true }
+          { upsert: true, returnDocument: 'after' }
         );
       }
     }
@@ -1147,7 +1147,7 @@ export const getDistricts = async (req, res) => {
       const doc = await District.findOneAndUpdate(
         { name },
         { $setOnInsert: { name } },
-        { upsert: true, new: true }
+        { upsert: true, returnDocument: 'after' }
       );
       districts.push({ _id: doc._id, name: doc.name });
     }
