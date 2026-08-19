@@ -16,6 +16,10 @@ config/seedSSETRD.js
 
 # Development database files
 data/
+scripts/backup.js
+scratch_reset_adee.js
+
+
 
 # Temporary rollback documentation (optional - remove this line if you want to commit TEMP_DB_ROLLBACK.md)
 # TEMP_DB_ROLLBACK.md

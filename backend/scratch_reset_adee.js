@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import dns from 'dns';
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
-mongoose.connect('mongodb+srv://vikas111006_db_user:vikas123456@railway.teguzs1.mongodb.net/railway-department?appName=Railway')
+mongoose.connect(process.env.MONGO_URI)
 .then(async () => {
   const hash = await bcrypt.hash('Test@1234', 10);
   const user = await mongoose.connection.collection('users').findOneAndUpdate(

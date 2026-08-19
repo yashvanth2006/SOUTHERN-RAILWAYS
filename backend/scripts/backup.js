@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
 
-const MONGO_URI = "mongodb+srv://vikas111006_db_user:vikas123456@railway.teguzs1.mongodb.net/railway-department?appName=Railway";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/railway";
 const BACKUP_DIR = path.join(process.cwd(), 'backup', Date.now().toString());
 
 async function backupDB() {
