@@ -1020,8 +1020,8 @@ export const resetUserPassword = async (req, res) => {
     const inScope = await isUserInScope(req.scope, user._id);
     if (!inScope) return res.status(403).json({ msg: "Access denied to this user" });
 
-    // Reset password to a secure random string
-    const tempPassword = crypto.randomBytes(6).toString("hex");
+    // Reset password to the user's PF Number as promised by the UI
+    const tempPassword = user.pfNo;
     const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
     user.password = hashedPassword;
