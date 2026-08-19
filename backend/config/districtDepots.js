@@ -25,48 +25,26 @@ export const DISTRICT_DEPOTS = {
     "NIL",
     "CAN"
   ],
-  Trivandrum: [
-    "TVC",
-    "QLN",
-    "KTYM",
-    "ERN",
-    "ERS",
-    "TCR",
-    "ALLP",
-    "CGY",
-    "TRVL",
-    "CNGR",
-    "KYJ",
-    "NCJ"
-  ],
+  Trivandrum: [],
   Trichy: [],
-  Chennai: [
-    "MAS",
-    "MS",
-    "TBM",
-    "CGL",
-    "AJJ",
-    "TRL",
-    "AVD",
-    "VLCY",
-    "PER",
-    "RPM",
-    "ENR",
-    "GPD"
-  ],
+  Chennai: [],
   Madurai: [
-    "MDU",
+    "MPA",
     "DG",
-    "TEN",
+    "MDU",
     "VPT",
+    "CVP",
+    "TEN",
     "MNM",
+    "KKDI",
     "SCT",
+    "PUU",
+    "RMD",
     "TN",
     "RJPM",
-    "KKDI",
+    "NZT",
     "PLNI",
-    "TSI",
-    "CVP"
+    "ASD"
   ]
 };
 
