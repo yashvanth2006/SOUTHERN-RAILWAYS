@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Fragment } from "react";
 import api from "../api/axios";
 import Swal from "sweetalert2";
+import ResponsiveSection from "./ResponsiveSection";
 
 import {
-  AlertTriangle,
+  Wrench,
   CheckCircle,
   Clock,
   User,
@@ -12,7 +13,11 @@ import {
   ChevronUp,
 } from "lucide-react";
 
-export default function AbnormalityDashboard({ depot = "" }) {
+export default function AbnormalityDashboard({
+  depot = "",
+  isOpen = true,
+  setIsOpen = () => {}
+}) {
   const role = localStorage.getItem("role");
 
   const [reports, setReports] = useState([]);
@@ -76,32 +81,43 @@ export default function AbnormalityDashboard({ depot = "" }) {
   const totalDrivers = new Set(reports.map((r) => r.driverId)).size;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between w-full gap-4">
-        <div className="flex items-center gap-3">
-        <AlertTriangle className="text-red-600" size={28} />
-
-        <div>
-          <h2 className="text-2xl font-bold">Track Abnormalities</h2>
-
-          <p className="text-gray-500">Last 30 Days</p>
+    <ResponsiveSection
+      id="section-abnormalities"
+      title="Track Abnormalities"
+      icon={<Wrench size={20} />}
+      isOpenProp={isOpen}
+      onToggle={setIsOpen}
+      alwaysCollapsible={true}
+      headerRight={
+        <div className="relative w-full sm:w-64 md:w-80">
+          <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+          <input
+            placeholder="Search Driver"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              if (e.target.value && !isOpen) setIsOpen(true);
+            }}
+            className="border border-slate-200 w-full rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
+          />
         </div>
-        </div>
-        <div className="bg-white rounded-xl shadow p-3 sm:p-4 flex w-full lg:w-auto">
-          <div className="relative w-full">
-            <Search size={18} className="absolute left-3 top-3 text-gray-400" />
+      }
+    >
+      <div className="space-y-6">
 
-            <input
-              placeholder="Search Driver"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="border w-full lg:w-80 rounded-lg pl-10 pr-4 py-2"
-            />
-          </div>
+        {/* Mobile Search - Rendered only on mobile inside expanded content */}
+        <div className="md:hidden relative w-full mb-4">
+          <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+          <input
+            placeholder="Search Driver"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              if (e.target.value && !isOpen) setIsOpen(true);
+            }}
+            className="border border-slate-200 w-full rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
+          />
         </div>
-      </div>
 
       {/* Summary */}
 
@@ -137,25 +153,21 @@ export default function AbnormalityDashboard({ depot = "" }) {
 
       {/* TABLE */}
 
-      <div className="bg-white rounded-xl shadow overflow-x-auto">
-        <table className="min-w-[750px] w-full text-sm">
-          <thead className="bg-slate-100">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-[750px] w-full text-sm text-left whitespace-nowrap">
+            <thead className="bg-[#0b659a]/5 border-b border-[#0b659a]/10 text-[#0b659a] font-semibold">
             <tr>
-              <th className="px-4 py-3 text-left">Driver</th>
-
-              <th className="px-4 py-3 text-left">Depot</th>
-
-              <th className="px-4 py-3 text-left">Tower Car</th>
-
-              <th className="px-4 py-3 text-left">Date</th>
-
-              <th className="px-4 py-3 text-left">Status</th>
-
-              <th className="px-3 sm:px-4 py-3 text-center whitespace-nowrap">View</th>
+              <th className="px-5 py-4">Driver</th>
+              <th className="px-5 py-4">Depot</th>
+              <th className="px-5 py-4">Tower Car</th>
+              <th className="px-5 py-4">Date</th>
+              <th className="px-5 py-4">Status</th>
+              <th className="px-5 py-4 text-center">View</th>
             </tr>
           </thead>
 
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {loading && (
               <tr>
                 <td colSpan={6} className="py-8 text-center">
@@ -174,19 +186,15 @@ export default function AbnormalityDashboard({ depot = "" }) {
 
             {!loading &&
               filtered.map((report) => (
-                <>
-                  <tr key={report._id} className="border-t hover:bg-slate-50">
-                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">{report.driverName}</td>
-
-                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">{report.depotName}</td>
-
-                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">{report.towerCarNo}</td>
-
-                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
+                <Fragment key={report._id}>
+                  <tr className="hover:bg-slate-50 transition-colors">
+                    <td className="px-5 py-4">{report.driverName}</td>
+                    <td className="px-5 py-4">{report.depotName}</td>
+                    <td className="px-5 py-4">{report.towerCarNo}</td>
+                    <td className="px-5 py-4">
                       {new Date(report.createdAt).toLocaleDateString()}
                     </td>
-
-                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold
                       ${
@@ -198,20 +206,19 @@ export default function AbnormalityDashboard({ depot = "" }) {
                         {report.status}
                       </span>
                     </td>
-
-                    <td className="px-3 sm:px-4 py-3 text-center whitespace-nowrap">
+                    <td className="px-5 py-4 text-center">
                       <button
                         onClick={() =>
                           setExpanded(
                             expanded === report._id ? null : report._id,
                           )
                         }
-                        className="inline-flex items-center gap-1 bg-[#0b659a] text-white px-3 py-1 rounded-lg hover:bg-[#084d78] transition whitespace-nowrap"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border-[#0b659a] hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300 whitespace-nowrap"
                       >
                         {expanded === report._id ? (
-                          <ChevronUp size={16} />
+                          <ChevronUp size={14} />
                         ) : (
-                          <ChevronDown size={16} />
+                          <ChevronDown size={14} />
                         )}
                         View
                       </button>
@@ -230,7 +237,7 @@ export default function AbnormalityDashboard({ depot = "" }) {
                             {report.abnormalities.map((item, index) => (
                               <div
                                 key={index}
-                                className="bg-white border rounded-xl p-4 break-words"
+                                className="bg-white border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-xl p-4 break-words"
                               >
                                 <h4 className="font-semibold text-[#0b659a]">
                                   {item.type}
@@ -260,12 +267,13 @@ export default function AbnormalityDashboard({ depot = "" }) {
                                         [report._id]: e.target.value,
                                       })
                                     }
-                                    className="w-full border rounded-lg px-4 py-2 text-sm"
+                                    className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2 text-sm"
                                   />
 
-                                  <button
-                                    className="mt-3 w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
-                                    onClick={async () => {
+                                  <div className="mt-4 flex justify-end">
+                                    <button
+                                      className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg whitespace-nowrap"
+                                      onClick={async () => {
                                       if (
                                         !(actionTaken[report._id] || "").trim()
                                       ) {
@@ -309,6 +317,7 @@ export default function AbnormalityDashboard({ depot = "" }) {
                                   >
                                     Mark as Action Taken
                                   </button>
+                                  </div>
                                 </>
                               ) : (
                                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 break-words">
@@ -325,12 +334,14 @@ export default function AbnormalityDashboard({ depot = "" }) {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               ))}
           </tbody>
         </table>
+        </div>
       </div>
-    </div>
+      </div>
+    </ResponsiveSection>
   );
 }
 

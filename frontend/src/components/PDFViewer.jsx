@@ -89,7 +89,7 @@ export default function PDFViewer({
   if (error || !processedUrl) {
     return (
       <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 text-center my-8">
-        <FileText className="mx-auto text-indigo-600 mb-4" size={48} />
+        <FileText className="mx-auto text-[#0b659a] mb-4" size={48} />
         <h3 className="text-gray-800 font-semibold mb-2">
           {error || "Unable to Display PDF"}
         </h3>
@@ -102,8 +102,8 @@ export default function PDFViewer({
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-4 py-2
-                       bg-indigo-600 text-white rounded-lg
-                       hover:bg-indigo-700 transition"
+                       bg-[#0b659a] text-white rounded-lg
+                       hover:bg-[#09527d] transition"
           >
             <ExternalLink size={18} />
             Open PDF
@@ -129,7 +129,7 @@ export default function PDFViewer({
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
           <div className="text-center">
-            <Loader2 className="w-10 h-10 animate-spin text-indigo-600 mx-auto mb-3" />
+            <Loader2 className="w-10 h-10 animate-spin text-[#0b659a] mx-auto mb-3" />
             <p className="text-gray-500">Loading PDF...</p>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function PDFViewer({
 
       {/* PDF Viewer */}
       <Worker workerUrl={PDFJS_WORKER_URL}>
-        <div className="h-full border rounded-lg overflow-hidden bg-gray-100">
+        <div className="h-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg overflow-hidden bg-gray-100">
           <Viewer
             fileUrl={processedUrl}
             plugins={[defaultLayoutPluginInstance]}
@@ -174,7 +174,7 @@ export function SimplePDFViewer({ url, onLoad, onError }) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0b659a] text-white rounded-lg hover:bg-[#09527d] transition"
             onClick={() => onLoad?.()}
           >
             <ExternalLink size={18} />

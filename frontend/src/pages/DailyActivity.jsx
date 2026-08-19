@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
+import CustomSelect from "../components/CustomSelect";
 import Swal from "sweetalert2";
 import {
   LogIn,
@@ -10,10 +10,11 @@ import {
   Gauge,
   MapPin,
   Hash,
-  CheckCircle
+  CheckCircle,
+  Camera,
+  ImagePlus,
+  RefreshCw
 } from "lucide-react";
-import Footer from "../components/Footer";
-
 export default function DailyActivity() {
   const [fromStation, setFromStation] = useState("");
   const [toStation, setToStation] = useState("");
@@ -30,7 +31,7 @@ const [signOutImage, setSignOutImage] = useState(null);
   const totalDistance = Number(km || 0);
   const mileageAmount = totalDistance * 5.2;
 
-  const towerCars = ["RU 927/017", "SR 220035", "SR 210018", "SR 960025", "SR 23025", "SR 240063", "RU 06878", "SR 230022", "SR 210067", "RU 01896", "RU 176019", "SR 230059", "RU 9516", "RU 9514", "RU 9496", "RU 950021", "LR", "TRAINING"];
+  const [towerCars, setTowerCars] = useState([]);
 
   const getLocationName = async () => {
     return new Promise((resolve, reject) => {
@@ -47,6 +48,8 @@ const [signOutImage, setSignOutImage] = useState(null);
   };
 
   useEffect(() => {
+    api.get("/engine/tower-cars/list").then(res => setTowerCars(res.data || []));
+
     api.get("/driver/active-duty").then(async res => {
       if (res.data.active) {
         setSignedIn(true);
@@ -222,7 +225,6 @@ const signOut = async () => {
 
   return (
     <>
-      <Navbar />
       <div className="rail-page">
         <div className="mx-auto max-w-5xl space-y-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -239,38 +241,25 @@ const signOut = async () => {
 
           <SectionCard title="Sign ON" icon={<LogIn />} status={signedIn ? "Completed" : "Pending"} tone={signedIn ? "valid" : "warning"}>
             <ReadOnlyInput label="From Station" icon={<MapPin size={18} />} value={fromStation} />
-            <SelectInput label="Tower Car Number" icon={<Hash size={18} />} value={twNumber} onChange={setTwNumber} disabled={signedIn} options={towerCars} />
+            <div className="mb-3">
+              <label className="mb-2 block text-sm font-semibold text-[#1F2937]">Tower Car Number</label>
+              <CustomSelect 
+                value={twNumber} 
+                onChange={setTwNumber} 
+                disabled={signedIn} 
+                options={[
+                  { value: "", label: "Select Tower Car" },
+                  ...towerCars.map(opt => ({ value: opt, label: opt }))
+                ]}
+                placeholder="Select Tower Car"
+                icon={<Hash size={18} />}
+              />
+            </div>
             <label className="mt-3 flex items-center gap-3 text-sm font-semibold text-[#1F2937]">
-              <input type="checkbox" checked={breathAnalyserinitial} onChange={() => setBreathAnalyserinitial(!breathAnalyserinitial)} className="h-4 w-4 rounded border-[#D1D5DB]" />
+              <input type="checkbox" checked={breathAnalyserinitial} onChange={() => setBreathAnalyserinitial(!breathAnalyserinitial)} className="h-4 w-4 rounded border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB]" />
               Breath Analyser Test Done
             </label>
-            <div className="mt-4">
-
-  <label className="block text-sm font-semibold text-[#1F2937] mb-2">
-    Upload Breath Analyser Photo
-  </label>
-
-  <input
-    type="file"
-    accept="image/*"
-    capture="environment"
-    onChange={(e) =>
-      setSignInImage(e.target.files[0])
-    }
-    className="block w-full rounded-xl border border-[#D1D5DB] bg-white px-3 py-2 text-sm"
-  />
-
-  {signInImage && (
-
-    <p className="mt-2 text-sm text-green-700">
-
-      📷 {signInImage.name}
-
-    </p>
-
-  )}
-
-</div>
+            <PhotoUploadBox image={signInImage} onImageSelect={setSignInImage} onImageRemove={() => setSignInImage(null)} />
             <ActionButton label={signedIn ? "Signed ON" : "Sign ON"} icon={<CheckCircle />} onClick={signIn} loading={loading} disabled={signedIn} color="green" />
           </SectionCard>
 
@@ -278,37 +267,11 @@ const signOut = async () => {
             <ReadOnlyInput label="To Station (Auto detected)" icon={<MapPin size={18} />} value={toStation} />
             <Input label="Total Distance (KM)" icon={<Route size={18} />} value={km} onChange={setKm} disabled={!signedIn} />
             <label className="mt-3 flex items-center gap-3 text-sm font-semibold text-[#1F2937]">
-              <input type="checkbox" checked={breathAnalyserDone} onChange={() => setBreathAnalyserDone(!breathAnalyserDone)} className="h-4 w-4 rounded border-[#D1D5DB]" />
+              <input type="checkbox" checked={breathAnalyserDone} onChange={() => setBreathAnalyserDone(!breathAnalyserDone)} className="h-4 w-4 rounded border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB]" />
               Breath Analyser Test Done
             </label>
-            <div className="mt-4">
-
-  <label className="block text-sm font-semibold text-[#1F2937] mb-2">
-    Upload Breath Analyser Photo
-  </label>
-
-  <input
-    type="file"
-    accept="image/*"
-    capture="environment"
-    onChange={(e) =>
-      setSignOutImage(e.target.files[0])
-    }
-    className="block w-full rounded-xl border border-[#D1D5DB] bg-white px-3 py-2 text-sm"
-  />
-
-  {signOutImage && (
-
-    <p className="mt-2 text-sm text-green-700">
-
-      📷 {signOutImage.name}
-
-    </p>
-
-  )}
-
-</div>
-            <div className="mt-4 flex items-center gap-4 rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+            <PhotoUploadBox image={signOutImage} onImageSelect={setSignOutImage} onImageRemove={() => setSignOutImage(null)} />
+            <div className="mt-4 flex items-center gap-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4">
               <Gauge className="text-[#0B3C5D]" />
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">Calculated Amount</p>
@@ -319,7 +282,7 @@ const signOut = async () => {
           </SectionCard>
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 }
@@ -358,23 +321,6 @@ function Input({ label, icon, value, onChange, disabled }) {
   );
 }
 
-function SelectInput({ label, icon, value, onChange, disabled, options }) {
-  return (
-    <div className="mb-3">
-      <label className="mb-2 block text-sm font-semibold text-[#1F2937]">{label}</label>
-      <div className="relative">
-        <span className="rail-input-icon">{icon}</span>
-        <select value={value} disabled={disabled} onChange={e => onChange(e.target.value)} className="rail-input rail-input-with-icon disabled:bg-[#F3F4F6]">
-          <option value="">Select Tower Car</option>
-          {options.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-}
-
 function ReadOnlyInput({ label, icon, value }) {
   return (
     <div className="mb-3">
@@ -393,5 +339,74 @@ function ActionButton({ label, icon, onClick, loading, disabled, color }) {
       {loading ? "Processing..." : label}
       {icon}
     </button>
+  );
+}
+
+function PhotoUploadBox({ image, onImageSelect, onImageRemove }) {
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+
+  return (
+    <div className="mt-4">
+      <label className="block text-sm font-semibold text-[#1F2937] mb-2">
+        Upload Breath Analyser Photo
+      </label>
+
+      {image ? (
+        <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-[#0b659a]/30 bg-[#F8FAFC] p-4 text-center transition-all">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
+              <CheckCircle size={24} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Photo Attached</p>
+              <p className="text-xs text-slate-500 truncate max-w-[200px] mx-auto">{image.name}</p>
+            </div>
+            <button
+              onClick={onImageRemove}
+              className="mt-2 text-xs font-semibold text-red-600 hover:text-red-700 flex items-center justify-center gap-1 mx-auto"
+            >
+              <RefreshCw size={14} /> Retake / Remove
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-5 text-center transition-all hover:border-[#0b659a]/50 hover:bg-slate-100">
+          <p className="mb-4 text-sm font-medium text-slate-500">How would you like to attach the photo?</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => cameraInputRef.current?.click()}
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#0b659a] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#09527d]"
+            >
+              <Camera size={18} />
+              Take Photo
+            </button>
+            <button
+              onClick={() => galleryInputRef.current?.click()}
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-white border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+            >
+              <ImagePlus size={18} />
+              Browse Gallery
+            </button>
+          </div>
+
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            ref={cameraInputRef}
+            onChange={(e) => onImageSelect(e.target.files[0])}
+            className="hidden"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            ref={galleryInputRef}
+            onChange={(e) => onImageSelect(e.target.files[0])}
+            className="hidden"
+          />
+        </div>
+      )}
+    </div>
   );
 }

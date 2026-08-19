@@ -47,3 +47,17 @@ coverage/
 
 docs
 
+# Unwanted files and DB dumps
+CODEBASE.md
+backend/check_null_districts.js
+backend/migrate.js
+backend/reorganize_db.js
+Railway-db-05-08-26/
+backend/check_users.js
+backend/check_users_new.js
+backend/test_login.js
+backend/test_mongoose.js
+backend/test_pass.js
+backend/fix_superadmin.js
+backend/seedMasterAdmin.js
+image.png

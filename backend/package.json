@@ -1,40 +1,53 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "dev": "nodemon server.js",
-    "dev:local": "NODE_ENV=development nodemon server.js",
-    "start": "node server.js",
-    "start:local": "NODE_ENV=development node server.js",
-    "seed:local": "NODE_ENV=development node config/seeder.js",
-    "seed:sse": "node config/seedSSETRD.js",
-    "validate": "node config/validateDatabase.js"
-  },
-  "type": "module",
-  "keywords": [
-    "railway",
-    "management",
-    "tower-wagon",
-    "mern"
-  ],
-  "author": "Sri Shakthi CSE Department",
-  "license": "ISC",
-  "description": "Tower Wagon Driver Management System - Backend API",
-  "dependencies": {
-    "axios": "^1.13.4",
-    "bcryptjs": "^3.0.3",
-    "cloudinary": "^1.41.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.1.1",
-    "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0",
-    "streamifier": "^0.1.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.11"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+        "dev": "nodemon server.js",
+        "dev:local": "set NODE_ENV=development&& nodemon server.js",
+        "start": "node server.js",
+        "start:local": "set NODE_ENV=development&& node server.js",
+        "seed:local": "set NODE_ENV=development&& node config/seeder.js",
+        "seed:sse": "node config/seedSSETRD.js",
+        "seed:districts": "node config/seedDistrictDepots.js",
+        "seed:districts:local": "set NODE_ENV=development&& node config/seedDistrictDepots.js",
+        "validate": "node config/validateDatabase.js",
+        "backfill:depots": "node scripts/backfillDepots.js",
+        "backfill:depots:commit": "node scripts/backfillDepots.js --commit",
+        "backfill:hierarchy": "node scripts/backfillUserHierarchy.js",
+        "backfill:hierarchy:commit": "node scripts/backfillUserHierarchy.js --commit",
+        "cleanup:test-accounts": "node scripts/cleanupTestAccounts.js",
+        "cleanup:test-accounts:commit": "node scripts/cleanupTestAccounts.js --commit",
+        "test:auth": "node tests/authorization/scopeService.test.js"
+    },
+    "type": "module",
+    "keywords": [
+        "railway",
+        "management",
+        "tower-wagon",
+        "mern"
+    ],
+    "author": "Sri Shakthi CSE Department",
+    "license": "ISC",
+    "description": "Tower Wagon Driver Management System - Backend API",
+    "dependencies": {
+        "axios": "^1.13.4",
+        "bcryptjs": "^3.0.3",
+        "cloudinary": "^1.41.3",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.3",
+        "express": "^5.2.1",
+        "express-mongo-sanitize": "^2.2.0",
+        "express-rate-limit": "^8.6.2",
+        "helmet": "^8.3.0",
+        "jsonwebtoken": "^9.0.3",
+        "mongoose": "^9.1.1",
+        "multer": "^2.0.2",
+        "multer-storage-cloudinary": "^4.0.0",
+        "streamifier": "^0.1.1",
+        "validator": "^13.15.35"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.11"
+    }
 }

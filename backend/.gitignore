@@ -4,6 +4,15 @@ node_modules
 .env.local
 .env.*.local
 controllers/dummy
+test_pass.js
+test_*.js
+check_*.js
+migrate*.js
+reorganize*.js
+fix_*.js
+seedMasterAdmin.js
+config/seeder.js
+config/seedSSETRD.js
 
 # Development database files
 data/

@@ -45,17 +45,15 @@ textarea {
 }
 
 .rail-card {
-  border: 1px solid #d6dee8;
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(11, 60, 93, 0.08);
+  box-shadow: 0 4px 24px rgba(11, 60, 93, 0.08);
 }
 
 .rail-panel {
-  border: 1px solid #d6dee8;
   background: linear-gradient(135deg, #ffffff 0%, #f8fbfe 100%);
   border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
 }
 
 .rail-input {
@@ -225,4 +223,167 @@ textarea {
 .rail-status-info {
   background: #e8f1f8;
   color: #0b3c5d;
+}
+
+/* Custom styles for React DatePicker */
+.react-datepicker-popper {
+  z-index: 50 !important;
+}
+
+.react-datepicker {
+  font-family: inherit !important;
+  border-radius: 12px !important;
+  border: 1px solid #d6dee8 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 25px -5px rgba(11, 101, 154, 0.1), 0 8px 10px -6px rgba(11, 101, 154, 0.1) !important;
+}
+
+.react-datepicker__header {
+  background-color: #f8faFC !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+  padding-top: 12px !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.react-datepicker__day-name {
+  color: #64748b !important;
+  font-weight: 600 !important;
+}
+
+.react-datepicker__day--selected, 
+.react-datepicker__day--in-selecting-range, 
+.react-datepicker__day--in-range, 
+.react-datepicker__month-text--selected, 
+.react-datepicker__month-text--in-selecting-range, 
+.react-datepicker__month-text--in-range, 
+.react-datepicker__quarter-text--selected, 
+.react-datepicker__quarter-text--in-selecting-range, 
+.react-datepicker__quarter-text--in-range, 
+.react-datepicker__year-text--selected, 
+.react-datepicker__year-text--in-selecting-range, 
+.react-datepicker__year-text--in-range {
+  background-color: #0b659a !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--keyboard-selected, 
+.react-datepicker__month-text--keyboard-selected, 
+.react-datepicker__quarter-text--keyboard-selected, 
+.react-datepicker__year-text--keyboard-selected {
+  background-color: #084d78 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day:hover, 
+.react-datepicker__month-text:hover, 
+.react-datepicker__quarter-text:hover, 
+.react-datepicker__year-text:hover {
+  background-color: #e8f1f8 !important;
+  border-radius: 8px !important;
+  color: #0b659a !important;
+}
+
+.react-datepicker__day {
+  border-radius: 8px !important;
+}
+/* ==========================================================================
+   SWEETALERT2 GLOBAL UI OVERRIDES
+   ========================================================================== */
+div:where(.swal2-container) div:where(.swal2-popup) {
+  border-radius: 20px !important;
+  box-shadow: 0 12px 32px rgba(11, 60, 93, 0.08) !important;
+  border: none !important;
+  font-family: "Poppins", sans-serif !important;
+  padding: 1.5rem !important;
+}
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+  font-weight: 700 !important;
+  color: #1e293b !important; /* text-slate-800 */
+}
+
+div:where(.swal2-container) div:where(.swal2-html-container) {
+  font-weight: 500 !important;
+  color: #64748b !important; /* text-slate-500 */
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm,
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel,
+div:where(.swal2-container) button:where(.swal2-styled).swal2-deny {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  padding: 10px 24px !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:hover,
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel:hover,
+div:where(.swal2-container) button:where(.swal2-styled).swal2-deny:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ==========================================================================
+   RAIL PAGE BACKGROUND WATERMARK
+   ========================================================================== */
+.rail-page {
+  position: relative;
+}
+
+.rail-page::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/app-logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 65%;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rail-page > div {
+  position: relative;
+  z-index: 10;
+}
+
+.rail-watermark {
+  position: relative;
+}
+
+.rail-watermark::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/app-logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 85%;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rail-watermark > * {
+  position: relative;
+  z-index: 10;
 }

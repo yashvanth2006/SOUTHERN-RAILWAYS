@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Swal from "sweetalert2";
-import { Lock, KeyRound, ShieldCheck, AlertTriangle } from "lucide-react";
+import { Lock, KeyRound, ShieldCheck, AlertTriangle, Eye, EyeOff } from "lucide-react";
 
 export default function ChangePassword() {
   const navigate = useNavigate();
@@ -24,6 +24,9 @@ export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const role = localStorage.getItem("role");
@@ -153,14 +156,18 @@ export default function ChangePassword() {
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
-                type="password"
+                type={showCurrent ? "text" : "password"}
                 placeholder="Enter your PF Number"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm
+                className="w-full pl-10 pr-10 py-2.5 border rounded-lg text-sm
                            focus:ring-2 focus:ring-amber-500 focus:border-amber-500
                            focus:outline-none transition"
               />
+              <button type="button" onClick={() => setShowCurrent(v => !v)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 focus:outline-none" tabIndex={-1}>
+                {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -172,14 +179,18 @@ export default function ChangePassword() {
             <div className="relative">
               <KeyRound className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
-                type="password"
+                type={showNew ? "text" : "password"}
                 placeholder="Enter new password (min. 6 characters)"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm
+                className="w-full pl-10 pr-10 py-2.5 border rounded-lg text-sm
                            focus:ring-2 focus:ring-amber-500 focus:border-amber-500
                            focus:outline-none transition"
               />
+              <button type="button" onClick={() => setShowNew(v => !v)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 focus:outline-none" tabIndex={-1}>
+                {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -191,14 +202,18 @@ export default function ChangePassword() {
             <div className="relative">
               <KeyRound className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
-                type="password"
+                type={showConfirm ? "text" : "password"}
                 placeholder="Re-enter new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm
+                className="w-full pl-10 pr-10 py-2.5 border rounded-lg text-sm
                            focus:ring-2 focus:ring-amber-500 focus:border-amber-500
                            focus:outline-none transition"
               />
+              <button type="button" onClick={() => setShowConfirm(v => !v)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 focus:outline-none" tabIndex={-1}>
+                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -233,12 +248,6 @@ export default function ChangePassword() {
             )}
           </button>
 
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-6 text-xs text-gray-400">
-          Tower Wagon Driver Management System<br />
-          Indian Railways - TRD/SA Division
         </div>
       </div>
     </div>

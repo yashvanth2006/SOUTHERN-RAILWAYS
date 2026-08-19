@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import Swal from "sweetalert2";
 import {
@@ -10,8 +9,7 @@ import {
   IdCard,
   Building2
 } from "lucide-react";
-import Footer from "../components/Footer";
-
+import CustomDatePicker from "../components/CustomDatePicker";
 export default function DriverProfile() {
   const [user, setUser] = useState(null);
 
@@ -71,18 +69,16 @@ export default function DriverProfile() {
   if (!user) {
     return (
       <>
-        <Navbar />
         <div className="rail-page flex items-center justify-center">
           <div className="rail-card px-8 py-6 text-[#6B7280]">Loading profile details...</div>
         </div>
-        <Footer />
+
       </>
     );
   }
 
   return (
     <>
-      <Navbar />
       <div className="rail-page">
         <div className="mx-auto max-w-4xl">
           <div className="mb-6 flex flex-col gap-3">
@@ -122,14 +118,14 @@ export default function DriverProfile() {
           </div>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }
 
 function ReadOnly({ label, value, icon }) {
   return (
-    <div className="rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+    <div className="rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border-[#D1D5DB] bg-[#F9FBFC] p-4">
       <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
         {icon} {label}
       </p>
@@ -159,17 +155,19 @@ function DateInput({ label, value, onChange }) {
   return (
     <div>
       <label className="mb-2 block text-sm font-semibold text-[#1F2937]">{label}</label>
-      <div className="relative">
-        <span className="rail-input-icon">
-          <Calendar size={18} />
-        </span>
-        <input
-          type="date"
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          className="rail-input rail-input-with-icon"
-        />
-      </div>
+        <div className="relative">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400">
+            <Calendar size={18} />
+          </div>
+          <div className="w-full">
+            <CustomDatePicker
+              value={value}
+              onChange={onChange}
+              className="rail-input rail-input-with-icon w-full pl-10"
+              placeholderText="DD/MM/YYYY"
+            />
+          </div>
+        </div>
     </div>
   );
 }

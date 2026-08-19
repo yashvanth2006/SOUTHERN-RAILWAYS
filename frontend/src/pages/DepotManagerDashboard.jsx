@@ -1,22 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
 import IssueDashboard from "./IssueDashboard";
 import AbnormalityDashboard from "../components/AbnormalityDashboard";
 import Swal from "sweetalert2";
+import { getDistrictAbbreviation } from "../utils/districtMapping";
 import {
-  Users,
   Search,
   Eye,
-  Train,
-  AlertTriangle,
+  TrainFront,
   ClipboardList,
   ShieldAlert,
   Clock,
-  TriangleAlert
+  TriangleAlert,
+  FileWarning,
+  CalendarClock,
+  Megaphone,
+  Wrench
 } from "lucide-react";
-import Footer from "../components/Footer";
+
+import ResponsiveSection from "../components/ResponsiveSection";
 
 export default function DepotManagerDashboard() {
   const [drivers, setDrivers] = useState([]);
@@ -33,6 +36,16 @@ const [showOverdues, setShowOverdues] = useState(false);
 
 const [showCirculars, setShowCirculars] = useState(false);
   const navigate = useNavigate();
+
+  // --- LR Due Search State ---
+  const [lrSearch, setLrSearch] = useState("");
+  const [showLrDropdown, setShowLrDropdown] = useState(false);
+  const [selectedLrDriver, setSelectedLrDriver] = useState("");
+
+  // --- PME/GRS/OC Search State ---
+  const [pmeSearch, setPmeSearch] = useState("");
+  const [showPmeDropdown, setShowPmeDropdown] = useState(false);
+  const [selectedPmeDriver, setSelectedPmeDriver] = useState("");
 
   /* ================= VIEW USER DETAILS ================= */
   const viewUserDetails = (userId) => {
@@ -142,6 +155,68 @@ const lrOverdueRecords =
     o => o.category === "LR Overdue"
   );
 
+  // --- LR Due Search Filtering ---
+  const lrFilteredDrivers = useMemo(() => {
+    if (!lrSearch.trim()) return [];
+    const prefix = lrSearch.toLowerCase();
+    const uniqueNames = new Set();
+    lrOverdueRecords.forEach(record => {
+      if (record.driverName.toLowerCase().startsWith(prefix)) {
+        uniqueNames.add(record.driverName);
+      }
+    });
+    return Array.from(uniqueNames).sort();
+  }, [lrSearch, lrOverdueRecords]);
+
+  const displayedLrRecords = useMemo(() => {
+    return selectedLrDriver
+      ? lrOverdueRecords.filter(r => r.driverName === selectedLrDriver)
+      : lrOverdueRecords;
+  }, [lrOverdueRecords, selectedLrDriver]);
+
+  const handleSelectLrDriver = (driverName) => {
+    setLrSearch(driverName);
+    setSelectedLrDriver(driverName);
+    setShowLrDropdown(false);
+  };
+
+  const handleLrSearchChange = (e) => {
+    setLrSearch(e.target.value);
+    setSelectedLrDriver("");
+    setShowLrDropdown(true);
+  };
+
+  // --- PME/GRS/OC Search Filtering ---
+  const pmeFilteredDrivers = useMemo(() => {
+    if (!pmeSearch.trim()) return [];
+    const prefix = pmeSearch.toLowerCase();
+    const uniqueNames = new Set();
+    trainingOverdueRecords.forEach(record => {
+      if (record.driverName.toLowerCase().startsWith(prefix)) {
+        uniqueNames.add(record.driverName);
+      }
+    });
+    return Array.from(uniqueNames).sort();
+  }, [pmeSearch, trainingOverdueRecords]);
+
+  const displayedPmeRecords = useMemo(() => {
+    return selectedPmeDriver
+      ? trainingOverdueRecords.filter(r => r.driverName === selectedPmeDriver)
+      : trainingOverdueRecords;
+  }, [trainingOverdueRecords, selectedPmeDriver]);
+
+  const handleSelectPmeDriver = (driverName) => {
+    setPmeSearch(driverName);
+    setSelectedPmeDriver(driverName);
+    setShowPmeDropdown(false);
+  };
+
+  const handlePmeSearchChange = (e) => {
+    setPmeSearch(e.target.value);
+    setSelectedPmeDriver("");
+    setShowPmeDropdown(true);
+  };
+
   const issueTotal = issues.length;
 
 const issuePending =
@@ -157,41 +232,50 @@ const circularPending = drivers.filter(
 // setCircularPending(res.data.circularPending);
 
 
-const scrollToSection = (
-  id,
-  toggleStateFn,
-  currentState
-) => {
-
+const scrollToSection = (id, toggleStateFn, currentState) => {
   if (toggleStateFn && !currentState) {
     toggleStateFn(true);
   }
 
   setTimeout(() => {
+    const section = document.getElementById(id);
+    if (section) {
+      // Account for mobile sticky top header (h-16 = 64px) + some breathing room
+      const headerOffset = window.innerWidth < 1024 ? 80 : 24;
+      const elementPosition = section.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-    document
-      .getElementById(id)
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
       });
-
+      
+      if (window.innerWidth < 768) {
+        setTimeout(() => {
+          const header = section.children[0];
+          const content = section.children[1];
+          if (header && content && content.classList.contains('hidden')) {
+            header.click();
+          }
+        }, 600);
+      }
+    }
   }, 100);
-
 };
 
   return (
     <>
-      <Navbar />
 
-      <div className="min-h-screen bg-[#F8FAFC] px-4 sm:px-6 lg:px-8 py-8">
+      <div className="rail-watermark min-h-screen bg-[#F8FAFC] px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-7xl mx-auto space-y-6">
 
           {/* HEADER */}
-           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+           {/* <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm"> */}
+           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
+              <p className="text-lg font-medium text-slate-600 mb-1">Hi, {localStorage.getItem("userName") || "User"}!</p>
               <h2 className="text-2xl font-bold text-gray-800">
-                SSE/TRD Dashboard
+                {`SSE/TRD/${localStorage.getItem("depotName")} Dashboard`}
               </h2>
               <p className="text-sm text-gray-500">
                 Manage drivers under your depot
@@ -199,7 +283,7 @@ const scrollToSection = (
             </div>
 
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow">
-              <Users className="text-blue-600" />
+              <TrainFront className="text-blue-600" />
               <span className="font-semibold text-gray-700">
                 Total Drivers: {drivers.length}
               </span>
@@ -208,7 +292,7 @@ const scrollToSection = (
 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
   <StatCard
-    icon={<Users />}
+    icon={<TrainFront />}
     label="Drivers"
     value={drivers.length}
     onClick={() =>
@@ -217,7 +301,7 @@ const scrollToSection = (
   />
 
   <StatCard
-    icon={<AlertTriangle />}
+    icon={<FileWarning />}
     label="PME/GRS/OC Due"
     value={trainingOverdues}
     onClick={() =>
@@ -232,7 +316,7 @@ const scrollToSection = (
   />
 
   <StatCard
-    icon={<AlertTriangle />}
+    icon={<CalendarClock />}
     label="LR Due"
     value={lrOverdues}
     onClick={() =>
@@ -246,7 +330,7 @@ const scrollToSection = (
   />
 
   <StatCard
-    icon={<AlertTriangle />}
+    icon={<Megaphone />}
     label="Circular Pending"
     colorClass="bg-red-50 text-red-600"
     value={circularPendings}
@@ -255,7 +339,7 @@ const scrollToSection = (
   />
 
   <StatCard
-    icon={<AlertTriangle />}
+    icon={<TriangleAlert />}
     label="TW Issues"
     value={issuePending}
     colorClass="bg-red-50 text-red-600"
@@ -269,7 +353,7 @@ const scrollToSection = (
   />
 
   <StatCard
-    icon={<TriangleAlert />}
+    icon={<Wrench />}
     colorClass="bg-red-50 text-red-600"
     label="Track Abnormalities"
     value={abnormalityPending}
@@ -298,160 +382,72 @@ const scrollToSection = (
          */}
 
 
-<div
-  id="section-issues"
-  className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#0b659a] group/card"
->
-  <button
-    onClick={() => setShowIssues(!showIssues)}
-    className="w-full flex items-center justify-between px-6 py-5 bg-white text-left"
-  >
-    <div className="flex items-center gap-4">
+<IssueDashboard isOpen={showIssues} setIsOpen={setShowIssues} />
 
-      <div className="p-2.5 bg-red-50 rounded-xl text-red-600 group-hover/card:bg-[#0b659a] group-hover/card:text-white transition-colors duration-300">
-        <AlertTriangle size={20} />
-      </div>
-
-      <span className="text-lg font-bold text-slate-800">
-        TW Issues (Higher Priority)
-      </span>
-
-    </div>
-
-    <span
-      className={`text-slate-400 transition-transform duration-300 ${
-        showIssues ? "rotate-180" : ""
-      }`}
-    >
-      ▼
-    </span>
-
-  </button>
-
-  {showIssues && (
-    <div className="p-6 border-t border-slate-100 bg-slate-50/30">
-      <IssueDashboard />
-    </div>
-  )}
-</div>
-
-     
-<div
-  id="section-abnormalities"
-  className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#0b659a] group/card"
->
-
-  <button
-    onClick={() => setShowAbnormalities(!showAbnormalities)}
-    className="w-full flex items-center justify-between px-6 py-5 text-left"
-  >
-
-    <div className="flex items-center gap-4">
-
-      <div className="p-2.5 bg-red-50 rounded-xl text-red-600 group-hover/card:bg-[#0b659a] group-hover/card:text-white transition-colors duration-300">
-
-        <TriangleAlert size={20}/>
-
-      </div>
-
-      <span className="text-lg font-bold text-slate-800">
-
-        Track Abnormalities
-
-      </span>
-
-    </div>
-
-    <span
-      className={`text-slate-400 transition-transform duration-300 ${
-        showAbnormalities ? "rotate-180" : ""
-      }`}
-    >
-      ▼
-    </span>
-
-  </button>
-
-  {showAbnormalities && (
-
-    <div className="p-6 border-t border-slate-100 bg-slate-50/30">
-
-      <AbnormalityDashboard />
-
-    </div>
-
-  )}
-
-</div>
+<AbnormalityDashboard isOpen={showAbnormalities} setIsOpen={setShowAbnormalities} />
 
 
-<div
+<ResponsiveSection
   id="section-overdues"
-  className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#0b659a] group/card"
+  title="Overdue Records"
+  icon={<ClipboardList size={20}/>}
+  isOpenProp={showOverdues}
+  onToggle={setShowOverdues}
+  alwaysCollapsible={true}
 >
-
-  <button
-    onClick={() => setShowOverdues(!showOverdues)}
-    className="w-full flex items-center justify-between px-6 py-5 text-left"
-  >
-
-    <div className="flex items-center gap-4">
-
-      <div className="p-2.5 bg-indigo-50 rounded-xl text-indigo-600 group-hover/card:bg-[#0b659a] group-hover/card:text-white transition-colors duration-300">
-
-        <ClipboardList size={20}/>
-
-      </div>
-
-      <span className="text-lg font-bold text-slate-800">
-
-        Overdue Records
-
-      </span>
-
-    </div>
-
-    <span
-      className={`text-slate-400 transition-transform duration-300 ${
-        showOverdues ? "rotate-180" : ""
-      }`}
-    >
-      ▼
-    </span>
-
-  </button>
-
-    {showOverdues && (
-
-      <div className="border-t p-5">
+  <div className="border-t p-5">
 
         {/* KEEP EVERYTHING INSIDE HERE */}
 
   <div>
 
-    <div className="px-5 py-4 border-b">
-
-      <h3 className="text-lg font-bold text-red-600">
-
-        Overdue Records
-
-      </h3>
-
-    </div>
+    
 
     <div className="p-5">
 
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+        <div className="flex items-center gap-3">
+          <ClipboardList className="text-red-600" size={22}/>
+          <h3 className="text-xl font-bold text-slate-800">
+            LR Due Records
+          </h3>
+        </div>
 
-  <ClipboardList className="text-red-600" size={22}/>
-
-  <h3 className="text-xl font-bold text-slate-800">
-
-      LR Due Records
-
-  </h3>
-
-</div>
+        {/* LR Due Search */}
+        <div className="relative w-full sm:w-64 md:w-80">
+          <div className="relative">
+            <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+            <input
+              placeholder="Search Driver"
+              value={lrSearch}
+              onChange={handleLrSearchChange}
+              onFocus={() => setShowLrDropdown(true)}
+              onBlur={() => setTimeout(() => setShowLrDropdown(false), 200)}
+              className="border border-slate-200 w-full rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
+            />
+          </div>
+          
+          {showLrDropdown && lrSearch.trim() && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+              {lrFilteredDrivers.length > 0 ? (
+                lrFilteredDrivers.map(name => (
+                  <div 
+                    key={name} 
+                    className="px-4 py-2 hover:bg-slate-50 cursor-pointer text-sm text-slate-700"
+                    onMouseDown={() => handleSelectLrDriver(name)}
+                  >
+                    {name}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-sm text-slate-500">
+                  No records found
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
       <Table
 
@@ -479,7 +475,7 @@ const scrollToSection = (
 
       >
 
-        {lrOverdueRecords.map((record, index) => (
+        {displayedLrRecords.map((record, index) => (
 
           <tr
 
@@ -511,7 +507,7 @@ const scrollToSection = (
 
                     ? "bg-red-100 text-red-700"
 
-                    : "bg-indigo-100 text-indigo-700"
+                    : "bg-[#0b659a]/10 text-[#0b659a]"
 
                 }`}
 
@@ -555,7 +551,7 @@ const scrollToSection = (
 
                 }
 
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border- [#0b659a] hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 shadow-sm "
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border- [#0b659a] hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 shadow-sm"
 
               >
 
@@ -585,16 +581,48 @@ const scrollToSection = (
 
     <div className="p-5">
 
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+        <div className="flex items-center gap-3">
+          <ClipboardList className="text-amber-600" size={22} />
+          <h3 className="text-xl font-bold text-slate-800">
+            PME/GRS/OC Records
+          </h3>
+        </div>
 
-        <ClipboardList className="text-amber-600" size={22} />
-
-       <h3 className="text-xl font-bold text-slate-800">
-
-         PME/GRS/OC Records
-
-        </h3>
-
+        {/* PME Search */}
+        <div className="relative w-full sm:w-64 md:w-80">
+          <div className="relative">
+            <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+            <input
+              placeholder="Search Driver"
+              value={pmeSearch}
+              onChange={handlePmeSearchChange}
+              onFocus={() => setShowPmeDropdown(true)}
+              onBlur={() => setTimeout(() => setShowPmeDropdown(false), 200)}
+              className="border border-slate-200 w-full rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
+            />
+          </div>
+          
+          {showPmeDropdown && pmeSearch.trim() && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+              {pmeFilteredDrivers.length > 0 ? (
+                pmeFilteredDrivers.map(name => (
+                  <div 
+                    key={name} 
+                    className="px-4 py-2 hover:bg-slate-50 cursor-pointer text-sm text-slate-700"
+                    onMouseDown={() => handleSelectPmeDriver(name)}
+                  >
+                    {name}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-sm text-slate-500">
+                  No records found
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <Table
@@ -623,7 +651,7 @@ const scrollToSection = (
 
       >
 
-        {trainingOverdueRecords.map((record, index) => (
+        {displayedPmeRecords.map((record, index) => (
 
           <tr
 
@@ -655,7 +683,7 @@ const scrollToSection = (
 
                     ? "bg-red-100 text-red-700"
 
-                    : "bg-indigo-100 text-indigo-700"
+                    : "bg-[#0b659a]/10 text-[#0b659a]"
 
                 }`}
 
@@ -699,7 +727,7 @@ const scrollToSection = (
 
                 }
 
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border- [#0b659a] hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 shadow-sm "
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border- [#0b659a] hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 shadow-sm"
 
               >
 
@@ -721,32 +749,20 @@ const scrollToSection = (
 
   </div>
       </div>
-
-    )}
-
-
-</div>
+</ResponsiveSection>
 
 
 
 
 
           {/* TABLE */}
- <Section
+ <ResponsiveSection
     id="section-drivers"
     title="Drivers"
-    icon={<Train />}
+    icon={<TrainFront />}
 >
             <div className="overflow-x-auto">
-               <div className="px-5 py-4 border-b">
-
-    <h3 className="text-lg font-bold text-red-600">
-
-       Drivers
-
-    </h3>
-
-  </div>
+               
   <div className="overflow-x-auto">
              <table className="min-w-[850px] w-full text-sm">
                 <thead className="bg-[#0b659a]/5 border-b border-[#0b659a]/10 text-[#0b659a] font-semibold">
@@ -794,7 +810,7 @@ const scrollToSection = (
                       <td className="px-4 py-3 text-center">
                         <button
                           onClick={() => viewUserDetails(d._id)}
-                          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border- [#0b659a] hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 shadow-sm "
+                          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border- [#0b659a] hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 shadow-sm"
                         >
                           <Eye size={16} />
                           View
@@ -806,13 +822,13 @@ const scrollToSection = (
               </table>
               </div>
             </div>
-          </Section>
+          </ResponsiveSection>
 
         </div>
       </div>
 
 
-      <Footer/>
+      
     </>
   );
 }
@@ -852,7 +868,7 @@ function StatCard({ icon, label, value, colorClass, onClick }) {
   return (
     <div 
       onClick={onClick}
-      className={`bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-[#0b659a] hover:-translate-y-1 group transition-all duration-300 flex items-center gap-5 ${onClick ? "cursor-pointer" : ""}`}
+      className={`bg-white p-6 rounded-2xl shadow-sm hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1.5 group transition-all duration-300 flex items-center gap-5 ${onClick ? "cursor-pointer" : ""}`}
     >
       <div className={`p-4 ${iconStyle} group-hover:bg-[#0b659a] group-hover:text-white rounded-2xl flex-shrink-0 transition-colors duration-300`}>
         {icon}
@@ -925,53 +941,6 @@ function Table({ headers, children, loading, emptyText }) {
   );
 }
 
-function Section({ title, icon, children, id }) {
-  return (
-    <div
-      id={id}
-      className="
-      bg-white
-      rounded-2xl
-      border
-      border-slate-100
-      shadow-sm
-      overflow-hidden
-      mb-6
-      flex
-      flex-col
-      group/section
-      transition-all
-      duration-300
-      hover:shadow-md
-      hover:border-[#0b659a]
-      hover:-translate-y-1
-      "
-    >
-      <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3">
-
-        <div className="p-2.5 bg-slate-100 rounded-xl text-[#0b659a] group-hover/section:bg-[#0b659a] group-hover/section:text-white transition-colors duration-300">
-
-          {icon}
-
-        </div>
-
-        <h3 className="text-lg font-bold text-slate-800">
-
-          {title}
-
-        </h3>
-
-      </div>
-
-      <div className="p-6 bg-slate-50/30">
-
-        {children}
-
-      </div>
-
-    </div>
-  );
-}
 
 // function StatCard({ icon, label, value, colorClass, onClick }) {
 //   const iconStyle = colorClass || "bg-slate-100 text-[#0b659a]";
@@ -1009,7 +978,7 @@ function Section({ title, icon, children, id }) {
 //   return (
 //     <div 
 //       onClick={onClick}
-//       className={`bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-[#0b659a] hover:-translate-y-1 group transition-all duration-300 flex items-center gap-5 ${onClick ? "cursor-pointer" : ""}`}
+//       className={`bg-white p-6 rounded-2xl shadow-sm hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1.5 group transition-all duration-300 flex items-center gap-5 ${onClick ? "cursor-pointer" : ""}`}
 //     >
 //       <div className={`p-4 ${iconStyle} group-hover:bg-[#0b659a] group-hover:text-white rounded-2xl flex-shrink-0 transition-colors duration-300`}>
 //         {icon}

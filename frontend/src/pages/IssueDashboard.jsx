@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import Swal from "sweetalert2";
+import ResponsiveSection from "../components/ResponsiveSection";
 
 import {
-  AlertTriangle,
+  TriangleAlert,
   Search,
   CheckCircle,
   Clock,
@@ -14,7 +13,9 @@ import {
 } from "lucide-react";
 
 export default function IssueDashboard({
-  selectedDepot = ""
+  depot = "",
+  isOpen = true,
+  setIsOpen = () => {}
 }) {
   const role = localStorage.getItem("role");
 
@@ -32,7 +33,8 @@ export default function IssueDashboard({
     try {
       setLoading(true);
 
-      const res = await api.get("/issues");
+      const url = depot ? `/issues?depot=${depot}` : "/issues";
+      const res = await api.get(url);
 
       setIssues(res.data);
     } catch (err) {
@@ -48,7 +50,7 @@ export default function IssueDashboard({
 
   useEffect(() => {
     loadIssues();
-  }, []);
+  }, [depot]);
 
   // const depots = [...new Set(issues.map((i) => i.depot))];
 
@@ -78,13 +80,9 @@ export default function IssueDashboard({
         .toLowerCase()
         .includes(search.toLowerCase());
 
-    const depotMatch =
-      selectedDepot === "" ||
-      issue.depot === selectedDepot;
-
-    return searchMatch && depotMatch;
+    return searchMatch;
   });
-}, [issues, search, selectedDepot]);
+}, [issues, search]);
 
 
 
@@ -97,55 +95,48 @@ export default function IssueDashboard({
   const drivers = new Set(issues.map((i) => i.driverId)).size;
 
   return (
-    <>
-      {/* <Navbar/> */}
+    <ResponsiveSection
+      id="section-issues"
+      title="TW Issues (Higher Priority)"
+      icon={<TriangleAlert size={20} />}
+      isOpenProp={isOpen}
+      onToggle={setIsOpen}
+      alwaysCollapsible={true}
+      headerRight={
+        <div className="relative w-full sm:w-64 md:w-80">
+          <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+          <input
+            placeholder="Search Driver"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              if (e.target.value && !isOpen) setIsOpen(true);
+            }}
+            className="border border-slate-200 w-full rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
+          />
+        </div>
+      }
+    >
+      <div className="max-w-7xl mx-auto space-y-6 p-1">
 
-      <div className="">
-        <div className="max-w-7xl mx-auto space-y-6 p-1">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex items-center gap-3">
-            <AlertTriangle className="text-red-600" size={30} />
+        {/* Mobile Search - Rendered only on mobile inside expanded content */}
+        <div className="md:hidden relative w-full mb-4">
+          <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+          <input
+            placeholder="Search Driver"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              if (e.target.value && !isOpen) setIsOpen(true);
+            }}
+            className="border border-slate-200 w-full rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
+          />
+        </div>
 
-            <div>
-              <h2 className="text-2xl font-bold">High Priority Issues</h2>
-
-              <p className="text-gray-500">Last 30 Days</p>
-            </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow p-3 sm:p-4 flex w-full lg:w-auto">
-            <div className="relative w-full">
-              <Search
-                size={18}
-                className="absolute left-3 top-3 text-gray-400"
-              />
-
-              <input
-                placeholder="Search Driver"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="border w-full lg:w-80 rounded-lg pl-10 pr-4 py-2"
-              />
-            </div>
-            
-          </div>
-          </div>
-
-          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card icon={<AlertTriangle />} title="Total" value={total} />
-
-            <Card icon={<Clock />} title="Pending" value={pending} />
-
-            <Card icon={<CheckCircle />} title="Resolved" value={resolved} />
-
-            <Card icon={<User />} title="Drivers" value={drivers} />
-          </div> */}
-
-          
-
-          <div className="bg-white rounded-xl shadow overflow-x-auto">
-            <table className="min-w-[900px] w-full text-sm">
-              <thead className="bg-slate-100">
+          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="min-w-[900px] w-full text-sm">
+                <thead className="bg-[#0b659a]/5 border-b border-[#0b659a]/10 text-[#0b659a] font-semibold">
                 <tr>
                   <TH>Driver</TH>
 
@@ -165,7 +156,7 @@ export default function IssueDashboard({
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody className="divide-y divide-slate-100">
                 {loading && (
                   <tr>
                     <td colSpan={8} className="text-center py-10 whitespace-nowrap">
@@ -176,7 +167,7 @@ export default function IssueDashboard({
 
                 {!loading &&
                   filtered.map((issue) => (
-                    <tr key={issue.checklistId} className="border-t">
+                    <tr key={issue.checklistId} className="hover:bg-slate-50 transition-colors">
                       <TD>{issue.driverName}</TD>
 
                       <TD>{issue.depot}</TD>
@@ -185,7 +176,7 @@ export default function IssueDashboard({
 
                       <TD>{issue.checklistType}</TD>
 
-                      <td className="px-3 sm:px-4 py-3 max-w-xs break-words">
+                      <td className="px-5 py-4 max-w-xs break-words">
   {issue.remarks}
 </td>
 
@@ -253,18 +244,18 @@ ${
                                   );
                                 }
                               }}
-                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg whitespace-nowrap"
+                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 text-green-600 rounded-lg hover:bg-green-600 hover:text-white hover:border-green-600 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300 whitespace-nowrap"
                             >
                               Resolve
                             </button>
                           ) : (
-                            <button className="text-[#0b659a] hover:text-[#084d78] transition p-1">
-                              <Eye size={18} />
+                            <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border-[#0b659a] hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300 whitespace-nowrap">
+                              <Eye size={16} /> View
                             </button>
                           )
                         ) : (
-                          <button className="text-[#0b659a] hover:text-[#084d78] transition p-1">
-                            <Eye size={18} />
+                          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 text-[#0b659a] rounded-lg hover:bg-[#0b659a] hover:text-white hover:border-[#0b659a] hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300 whitespace-nowrap">
+                            <Eye size={16} /> View
                           </button>
                         )}
                       </TD>
@@ -285,10 +276,8 @@ ${
             </table>
           </div>
         </div>
-      </div>
-
-      {/* <Footer /> */}
-    </>
+        </div>
+    </ResponsiveSection>
   );
 }
 
@@ -308,7 +297,7 @@ function Card({ icon, title, value }) {
 
 function TH({ children }) {
   return (
-    <th className="px-3 sm:px-4 py-3 text-left whitespace-nowrap">
+    <th className="px-5 py-4 text-left whitespace-nowrap">
       {children}
     </th>
   );
@@ -316,7 +305,7 @@ function TH({ children }) {
 
 function TD({ children }) {
   return (
-    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
+    <td className="px-5 py-4 whitespace-nowrap">
       {children}
     </td>
   );

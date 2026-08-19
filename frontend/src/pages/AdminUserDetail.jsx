@@ -18,8 +18,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import CustomDatePicker from "../components/CustomDatePicker";
 import EditUserModal from "../components/EditUserModal";
 import Swal from "sweetalert2";
 import {
@@ -44,6 +43,7 @@ import {
   Pencil
 } from "lucide-react";
 import BackButton from "../components/BackButton";
+import DailyDutyLogsTable from "../components/DailyDutyLogsTable";
 
 export default function AdminUserDetail() {
   const { userId } = useParams();
@@ -147,8 +147,7 @@ export default function AdminUserDetail() {
   if (loading) {
     return (
       <>
-        <Navbar />
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="rail-page flex items-center justify-center">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-[#0b659a] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-600">Loading user details...</p>
@@ -161,8 +160,7 @@ export default function AdminUserDetail() {
   if (!user) {
     return (
       <>
-        <Navbar />
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="rail-page flex items-center justify-center">
           <p className="text-gray-600">User not found</p>
         </div>
       </>
@@ -174,13 +172,12 @@ export default function AdminUserDetail() {
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-slate-100 px-4 py-6">
-        <div className="max-w-5xl mx-auto space-y-6">
+      <div className="rail-page">
+        <div className="mx-auto max-w-5xl space-y-6">
 
           {/* Header with Back and Edit buttons */}
           <div className="flex items-center justify-between">
-            <BackButton/>
+            <BackButton />
             <button
               onClick={() => setShowEditModal(true)}
               className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition font-medium"
@@ -191,7 +188,7 @@ export default function AdminUserDetail() {
           </div>
 
           {/* Header Card */}
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="rail-panel p-4 sm:p-6 md:p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="p-4 bg-[#0b659a]/10 rounded-full">
                 {isDriver ? (
@@ -201,7 +198,7 @@ export default function AdminUserDetail() {
                 )}
               </div>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-800">{user.name}</h1>
+                <h1 className="rail-page-title text-xl">{user.name}</h1>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <Badge color="brand">{user.role.replace("_", " ")}</Badge>
                   <span className="text-gray-500 text-sm flex items-center gap-1">
@@ -213,11 +210,10 @@ export default function AdminUserDetail() {
               </div>
 
               {/* Circular Status */}
-              <div className={`px-4 py-2 rounded-lg ${
-                user.circularStatus?.acknowledged
+              <div className={`px-4 py-2 rounded-lg ${user.circularStatus?.acknowledged
                   ? "bg-emerald-50 text-emerald-700"
                   : "bg-amber-50 text-amber-700"
-              }`}>
+                }`}>
                 <div className="flex items-center gap-2">
                   {user.circularStatus?.acknowledged ? (
                     <>
@@ -238,61 +234,61 @@ export default function AdminUserDetail() {
           {/* Summary Stats (for Drivers) */}
           {isDriver && user.summary && (
 
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-  <StatCard
-    icon={<Activity />}
-    label="Total Duty Logs"
-    value={user.summary.totalDutyLogs}
-  />
+              <StatCard
+                icon={<Activity />}
+                label="Total Duty Logs"
+                value={user.summary.totalDutyLogs}
+              />
 
-  <StatCard
-    icon={<MapPin />}
-    label="Total KM"
-    value={user.summary.totalKm?.toLocaleString() || 0}
-  />
+              <StatCard
+                icon={<MapPin />}
+                label="Total KM"
+                value={user.summary.totalKm?.toLocaleString() || 0}
+              />
 
-  <StatCard
-    icon={<Clock />}
-    label="Total Hours"
-    value={user.summary.totalHours?.toFixed(1) || 0}
-  />
+              <StatCard
+                icon={<Clock />}
+                label="Total Hours"
+                value={user.summary.totalHours?.toFixed(1) || 0}
+              />
 
-  <StatCard
-    icon={<ClipboardCheck />}
-    label="T-Cards"
-    value={user.summary.totalTCards}
-  />
+              <StatCard
+                icon={<ClipboardCheck />}
+                label="T-Cards"
+                value={user.summary.totalTCards}
+              />
 
-  {/* NEW */}
+              {/* NEW */}
 
-  <StatCard
-    icon={<CalendarDays />}
-    label="Avg KM / Day"
-   value={`${Number(user.summary.avgKmPerDay || 0).toFixed(1)} km`}
-  />
+              <StatCard
+                icon={<CalendarDays />}
+                label="Avg KM / Day"
+                value={`${Number(user.summary.avgKmPerDay || 0).toFixed(1)} km`}
+              />
 
-  {/* <StatCard
+              {/* <StatCard
     icon={<Clock />}
     label="Avg Hours / Day"
     value={`${Number(user.summary.avgHoursPerDay || 0).toFixed(1)} hrs`}
   /> */}
 
-  <StatCard
-    icon={<AlertTriangle />}
-    label="> 9 Hours"
-    value={`${user.summary.daysAbove9Hours || 0} Days`}
-  />
+              <StatCard
+                icon={<AlertTriangle />}
+                label="> 9 Hours"
+                value={`${user.summary.daysAbove9Hours || 0} Days`}
+              />
 
-  <StatCard
-    icon={<CheckCircle />}
-    label="≤ 9 Hours"
-    value={`${user.summary.daysBelow9Hours || 0} Days`}
-  />
+              <StatCard
+                icon={<CheckCircle />}
+                label="≤ 9 Hours"
+                value={`${user.summary.daysBelow9Hours || 0} Days`}
+              />
 
-</div>
+            </div>
 
-)}
+          )}
 
           {/* Summary Stats (for Managers) */}
           {isManager && user.summary && (
@@ -313,8 +309,8 @@ export default function AdminUserDetail() {
 
           {/* Driver Profile Details */}
           {isDriver && user.profile && (
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="rail-panel p-4 sm:p-6 md:p-8">
+              <h2 className="text-lg font-semibold text-[#0b659a] mb-4 flex items-center gap-2">
                 <BookOpen size={20} />
                 Profile Details
               </h2>
@@ -341,8 +337,8 @@ export default function AdminUserDetail() {
 
           {/* Training Status */}
           {isDriver && user.profile?.trainings && (
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="rail-panel p-4 sm:p-6 md:p-8">
+              <h2 className="text-lg font-semibold text-[#0b659a] mb-4 flex items-center gap-2">
                 <FileCheck size={20} />
                 Training Status
               </h2>
@@ -357,42 +353,42 @@ export default function AdminUserDetail() {
 
           {/* LR Details */}
           {isDriver && user.profile?.lrDetails?.length > 0 && (
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="rail-panel p-4 sm:p-6 md:p-8">
+              <h2 className="text-lg font-semibold text-[#0b659a] mb-4 flex items-center gap-2">
                 <MapPin size={20} />
                 LR Details ({user.profile.lrDetails.length} sections)
               </h2>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50">
+                  <thead className="bg-[#F8FAFC]">
                     <tr>
-                      <th className="px-4 py-2 text-left">Section</th>
-                      <th className="px-4 py-2 text-left">Done Date</th>
-                      <th className="px-4 py-2 text-left">Due Date</th>
-                      <th className="px-4 py-2 text-left">Status</th>
+                      <th className="py-4 px-4 text-left font-bold text-gray-900">Section</th>
+                      <th className="py-4 px-4 text-left font-bold text-gray-900">Done Date</th>
+                      <th className="py-4 px-4 text-left font-bold text-gray-900">Due Date</th>
+                      <th className="py-4 px-4 text-left font-bold text-gray-900">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {user.profile.lrDetails.map((lr, idx) => {
                       const isOverdue = new Date(lr.dueDate) < new Date();
                       return (
-                        <tr key={idx} className="border-t">
-                          <td className="px-4 py-2 font-medium">{lr.section}</td>
-                          <td className="px-4 py-2">
+                        <tr key={idx} className="hover:bg-slate-50 transition">
+                          <td className="py-3 px-4 font-medium text-gray-800">{lr.section}</td>
+                          <td className="py-3 px-4 text-gray-600">
                             {lr.doneDate ? new Date(lr.doneDate).toLocaleDateString() : "-"}
                           </td>
-                          <td className="px-4 py-2">
+                          <td className="py-3 px-4 text-gray-600">
                             {lr.dueDate ? new Date(lr.dueDate).toLocaleDateString() : "-"}
                           </td>
-                          <td className="px-4 py-2">
+                          <td className="py-3 px-4 text-gray-600">
                             {isOverdue ? (
-                              <span className="inline-flex items-center gap-1 text-red-600">
-                                <XCircle size={14} /> Overdue
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-bold uppercase tracking-wider">
+                                <XCircle size={15} /> Overdue
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-emerald-600">
-                                <CheckCircle size={14} /> Valid
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+                                <CheckCircle size={15} /> Valid
                               </span>
                             )}
                           </td>
@@ -407,122 +403,12 @@ export default function AdminUserDetail() {
 
           {/* Recent Duty Logs */}
           {isDriver && user.logs?.length > 0 && (
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                <Activity size={20} />
-                Daily Duty Logs ({user.logs.length} records)
-              </h2>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="px-4 py-2 text-left">Date</th>
-                      <th className="px-4 py-2 text-left">Sign ON</th>
-                      <th className="px-4 py-2 text-left">Sign OFF</th>
-                      <th className="px-4 py-2 text-center">KM</th>
-                      <th className="px-4 py-2 text-center">Breath Analyser</th>
-                      {/* <th className="px-4 py-2 text-center">Hours</th> */}
-                      <th className="px-4 py-2 text-center">Mileage</th>
-                       <th className="px-4 py-2 text-center">
-      Sign ON Image
-    </th>
-
-    <th className="px-4 py-2 text-center">
-      Sign OFF Image
-    </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {user.logs.map((log, idx) => (
-                      <tr key={idx} className="border-t hover:bg-slate-50">
-                        <td className="px-4 py-2">
-                          {new Date(log.logDate).toLocaleDateString()}
-                        </td>
-                        <td className="px-4 py-2">
-                          <div className="font-medium">{log.fromStation || "-"}</div>
-                          {log.signInTime && (
-                            <span className="text-xs text-gray-500">
-                              {new Date(log.signInTime).toLocaleTimeString()}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2">
-                          <div className="font-medium">{log.toStation || "-"}</div>
-                          {log.signOutTime && (
-                            <span className="text-xs text-gray-500">
-                              {new Date(log.signOutTime).toLocaleTimeString()}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2 text-center">{log.km || "-"}</td>
-                        <td className="px-4 py-2 text-center">
-                          {log.breathAnalyserDone ? (
-                            <span className="inline-flex items-center gap-1 text-emerald-600">
-                              <CheckCircle size={14} /> Yes
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-amber-600">
-                              <AlertTriangle size={14} /> No
-                            </span>
-                          )}
-                        </td>
-                        {/* <td className="px-4 py-2 text-center">{log.hours?.toFixed(1) || "-"}</td> */}
-                        <td className="px-4 py-2 text-center font-semibold text-[#0b659a]">
-                          {log.mileage?.toFixed(2) || "-"}
-                        </td>
-                        <td className="px-4 py-2 text-center">
-
-  {log.signInImage ? (
-
-    <a
-      href={log.signInImage}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-3 py-1 rounded-lg bg-blue-600 text-white text-xs hover:bg-blue-700"
-    >
-      View
-    </a>
-
-  ) : (
-
-    "-"
-
-  )}
-
-</td>
-
-<td className="px-4 py-2 text-center">
-
-  {log.signOutImage ? (
-
-    <a
-      href={log.signOutImage}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-3 py-1 rounded-lg bg-green-600 text-white text-xs hover:bg-green-700"
-    >
-      View
-    </a>
-
-  ) : (
-
-    "-"
-
-  )}
-
-</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <DailyDutyLogsTable logs={user.logs} />
           )}
 
           {/* T-Card Safety Checklists with Date Navigation */}
           {isDriver && (
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="rail-panel p-4 sm:p-6 md:p-8">
               {/* Header with Date Navigation */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -549,15 +435,17 @@ export default function AdminUserDetail() {
                     </button>
 
                     {/* Date Picker */}
-                    <div className="relative">
-                      <CalendarDays size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#0b659a]" />
-                      <input
-                        type="date"
-                        value={tcardSelectedDate}
-                        onChange={(e) => setTcardSelectedDate(e.target.value)}
-                        className="pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] focus:outline-none min-w-[160px]"
-                      />
-                    </div>
+                      <div className="relative">
+                        <CalendarDays size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#0b659a] z-10" />
+                        <div className="w-full">
+                          <CustomDatePicker
+                            value={tcardSelectedDate}
+                            onChange={(v) => setTcardSelectedDate(v)}
+                            className="pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] focus:outline-none min-w-[160px] w-full"
+                            placeholderText="DD/MM/YYYY"
+                          />
+                        </div>
+                      </div>
 
                     {/* Next Date Button */}
                     <button
@@ -584,7 +472,7 @@ export default function AdminUserDetail() {
               {!tcardLoading && tcardData.length > 0 && (
                 <div className="space-y-4">
                   {tcardData.map((card) => (
-                    <div key={card._id} className="border rounded-xl p-4 bg-slate-50">
+                    <div key={card._id} className="border border-[#E5E7EB] rounded-xl p-4 bg-slate-50">
                       <div className="flex justify-between items-center mb-3">
                         <span className="font-semibold text-gray-800">
                           Date: {new Date(card.date).toLocaleDateString()}
@@ -597,70 +485,68 @@ export default function AdminUserDetail() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {card.items?.map((item, idx) => {
 
-  const isDieselItem = item.description === "Check Diesel level";
-  const dieselThreshold = 500;
-  const isLowDiesel =
-    isDieselItem &&
-    item.dieselLevel !== null &&
-    item.dieselLevel < dieselThreshold;
+                          const isDieselItem = item.description === "Check Diesel level";
+                          const dieselThreshold = 500;
+                          const isLowDiesel =
+                            isDieselItem &&
+                            item.dieselLevel !== null &&
+                            item.dieselLevel < dieselThreshold;
 
-  return (
-    <div key={idx} className="flex items-start gap-2 text-sm p-2 bg-white rounded-lg">
+                          return (
+                            <div key={idx} className="flex items-start gap-2 text-sm p-2 bg-white rounded-lg">
 
-      <span className={item.checked ? "text-emerald-500" : "text-red-500"}>
-        {item.checked ? "✓" : "✗"}
-      </span>
+                              <span className={item.checked ? "text-emerald-500" : "text-red-500"}>
+                                {item.checked ? "✓" : "✗"}
+                              </span>
 
-      <div className="flex-1">
+                              <div className="flex-1">
 
-        <p className={item.checked ? "text-gray-700" : "text-red-700 font-medium"}>
-          {item.description}
-        </p>
+                                <p className={item.checked ? "text-gray-700" : "text-red-700 font-medium"}>
+                                  {item.description}
+                                </p>
 
-        {/* 🔥 Diesel Level Display */}
-        {isDieselItem && item.dieselLevel !== null && (
-          <div
-            className={`mt-1 inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold border
-              ${
-                isLowDiesel
-                  ? "bg-red-50 text-red-700 border-red-300"
-                  : "bg-emerald-50 text-emerald-700 border-emerald-300"
-              }
+                                {/* 🔥 Diesel Level Display */}
+                                {isDieselItem && item.dieselLevel !== null && (
+                                  <div
+                                    className={`mt-1 inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold border
+              ${isLowDiesel
+                                        ? "bg-red-50 text-red-700 border-red-300"
+                                        : "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                      }
             `}
-          >
-            Diesel Level: {item.dieselLevel} L
-            {isLowDiesel && " (Below Threshold)"}
-          </div>
-        )}
+                                  >
+                                    Diesel Level: {item.dieselLevel} L
+                                    {isLowDiesel && " (Below Threshold)"}
+                                  </div>
+                                )}
 
-        {/* 🔥 Remarks + Priority */}
-        {item.remarks && (
-          <div className="mt-1 flex items-center gap-2 flex-wrap">
-            <p className="text-xs text-gray-500">
-              Remarks: {item.remarks}
-            </p>
+                                {/* 🔥 Remarks + Priority */}
+                                {item.remarks && (
+                                  <div className="mt-1 flex items-center gap-2 flex-wrap">
+                                    <p className="text-xs text-gray-500">
+                                      Remarks: {item.remarks}
+                                    </p>
 
-            {item.priority && (
-              <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold
-                  ${
-                    item.priority === "HIGH"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-amber-100 text-amber-700"
-                  }`}
-              >
-                {item.priority === "HIGH"
-                  ? "High Priority"
-                  : "Less Priority"}
-              </span>
-            )}
-          </div>
-        )}
+                                    {item.priority && (
+                                      <span
+                                        className={`px-2 py-0.5 rounded-full text-[10px] font-semibold
+                  ${item.priority === "HIGH"
+                                            ? "bg-red-100 text-red-700"
+                                            : "bg-amber-100 text-amber-700"
+                                          }`}
+                                      >
+                                        {item.priority === "HIGH"
+                                          ? "High Priority"
+                                          : "Less Priority"}
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
 
-      </div>
-    </div>
-  );
-})}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -693,8 +579,8 @@ export default function AdminUserDetail() {
 
           {/* No Duty Logs Message */}
           {isDriver && (!user.logs || user.logs.length === 0) && (
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="rail-panel p-4 sm:p-6 md:p-8">
+              <h2 className="text-lg font-semibold text-[#0b659a] mb-4 flex items-center gap-2">
                 <Activity size={20} />
                 Duty Logs
               </h2>
@@ -714,7 +600,7 @@ export default function AdminUserDetail() {
         />
       )}
 
-      <Footer />
+
     </>
   );
 }

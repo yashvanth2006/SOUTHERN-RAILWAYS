@@ -1,0 +1,825 @@
+[
+  {
+    "_id": "6a55e2944313ff04fcc8cffd",
+    "depot": "SA",
+    "towerCarNumber": "SR 210018",
+    "towerCar": {
+      "type": "DETC (8-Wheeler) ",
+      "make": "DMW, PATIALA",
+      "doc": "2021-09-11T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-05-30T00:00:00.000Z",
+      "dueDate": "2026-07-13T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "M/s Cummins",
+      "bCheckDate": "2026-06-13T00:00:00.000Z",
+      "bCheckHours": 4778,
+      "bCheckDueDate": "2026-12-13T00:00:00.000Z",
+      "bCheckDueHours": 5078,
+      "cCheckDate": "2025-10-01T00:00:00.000Z",
+      "cCheckHours": 4034,
+      "cCheckDueDate": "2025-10-01T00:00:00.000Z",
+      "cCheckDueHours": 5536,
+      "dCheckDate": "2025-10-01T00:00:00.000Z",
+      "dCheckHours": 4036,
+      "dCheckDueDate": "2027-10-01T00:00:00.000Z",
+      "dCheckDueHours": 7036,
+      "pohDate": "2021-09-11T00:00:00.000Z",
+      "pohDueDate": "2027-09-11T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-02-04T00:00:00.000Z",
+      "dueDate": "2027-02-04T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": "2024-01-02T00:00:00.000Z",
+      "currentHours": 2600,
+      "dueHours": 4600
+    },
+    "startingBattery": {
+      "make": "BHARAT",
+      "commissionDate": "2025-07-23T00:00:00.000Z",
+      "dueDate": "2029-01-23T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": "HBL",
+      "commissionDate": "2021-09-11T00:00:00.000Z",
+      "dueDate": "2026-03-11T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "ESCORTS",
+      "serviceDate": "2025-08-03T00:00:00.000Z",
+      "serviceHours": 1200,
+      "dueHours": 1500
+    },
+    "failures": [],
+    "createdAt": "2026-07-14T07:17:40.453Z",
+    "updatedAt": "2026-07-14T07:51:29.521Z",
+    "__v": 1
+  },
+  {
+    "_id": "6a55e6e54313ff04fcc8d05f",
+    "depot": "KRR",
+    "towerCarNumber": "RU 01896",
+    "towerCar": {
+      "type": "DETC (8-Wheeler)",
+      "make": "ICF, Chennai",
+      "doc": "2001-11-23T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-06-13T00:00:00.000Z",
+      "dueDate": "2026-07-28T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "M/s Cummins",
+      "bCheckDate": "2026-04-21T00:00:00.000Z",
+      "bCheckHours": 22840,
+      "bCheckDueDate": "2026-10-20T00:00:00.000Z",
+      "bCheckDueHours": 23140,
+      "cCheckDate": "2025-06-12T00:00:00.000Z",
+      "cCheckHours": 22064,
+      "cCheckDueDate": "2026-06-12T00:00:00.000Z",
+      "cCheckDueHours": 23564,
+      "dCheckDate": "2022-05-07T00:00:00.000Z",
+      "dCheckHours": 18285,
+      "dCheckDueDate": "2024-05-07T00:00:00.000Z",
+      "dCheckDueHours": 24285,
+      "pohDate": "2022-05-07T00:00:00.000Z",
+      "pohDueDate": "2028-05-06T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2025-12-01T00:00:00.000Z",
+      "dueDate": "2026-12-01T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": "2022-05-01T00:00:00.000Z",
+      "currentHours": 18285,
+      "dueHours": 20285
+    },
+    "startingBattery": {
+      "make": "MICROTEX",
+      "commissionDate": "2026-06-07T00:00:00.000Z",
+      "dueDate": "2030-12-07T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": "AMARARAJA",
+      "commissionDate": "2022-05-01T00:00:00.000Z",
+      "dueDate": "2026-11-01T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "MARSHEL FEILD",
+      "serviceDate": "2026-02-12T00:00:00.000Z",
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [
+      {
+        "component": "Air Compressor ",
+        "description": "Crank shaft Broken",
+        "failureDate": "2026-06-29T00:00:00.000Z"
+      }
+    ],
+    "createdAt": "2026-07-14T07:36:05.840Z",
+    "updatedAt": "2026-07-14T07:53:49.266Z",
+    "__v": 1
+  },
+  {
+    "_id": "6a55dddb4313ff04fcc8cf97",
+    "depot": "ED",
+    "towerCarNumber": "SR 240063",
+    "towerCar": {
+      "type": "DETC (8 Wheeler)",
+      "make": "PLW, Patiala",
+      "doc": "2025-06-04T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-06-12T00:00:00.000Z",
+      "dueDate": "2026-07-27T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "M/s Cummins",
+      "bCheckDate": "2026-05-09T00:00:00.000Z",
+      "bCheckHours": 940,
+      "bCheckDueDate": "2026-11-09T00:00:00.000Z",
+      "bCheckDueHours": 1240,
+      "cCheckDate": "2025-06-04T00:00:00.000Z",
+      "cCheckHours": 0,
+      "cCheckDueDate": "2026-06-04T00:00:00.000Z",
+      "cCheckDueHours": 1500,
+      "dCheckDate": "2025-06-04T00:00:00.000Z",
+      "dCheckHours": 0,
+      "dCheckDueDate": "2027-06-04T00:00:00.000Z",
+      "dCheckDueHours": 3000,
+      "pohDate": "2025-06-04T00:00:00.000Z",
+      "pohDueDate": "2031-06-04T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-06-06T00:00:00.000Z",
+      "dueDate": "2027-06-06T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "MICROTEX",
+      "commissionDate": "2024-02-01T00:00:00.000Z",
+      "dueDate": "2028-08-01T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": "AMARARAJA",
+      "commissionDate": "2024-07-01T00:00:00.000Z",
+      "dueDate": "2029-01-01T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "ESCORTS PVT Ltd",
+      "serviceDate": "2026-06-10T00:00:00.000Z",
+      "serviceHours": 354,
+      "dueHours": 654
+    },
+    "failures": [],
+    "createdAt": "2026-07-14T06:57:31.171Z",
+    "updatedAt": "2026-07-14T06:57:31.171Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a55db384313ff04fcc8cf76",
+    "depot": "PTJ",
+    "towerCarNumber": "SR 210067",
+    "towerCar": {
+      "type": "DETC (8 Wheeler) ",
+      "make": "ICF, Chennai",
+      "doc": "2021-11-26T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-07-27T00:00:00.000Z",
+      "dueDate": "2026-09-10T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "M/s Cummins",
+      "bCheckDate": "2026-05-25T00:00:00.000Z",
+      "bCheckHours": 4567,
+      "bCheckDueDate": "2026-11-25T00:00:00.000Z",
+      "bCheckDueHours": 4867,
+      "cCheckDate": "2025-08-02T00:00:00.000Z",
+      "cCheckHours": 3710,
+      "cCheckDueDate": "2026-08-02T00:00:00.000Z",
+      "cCheckDueHours": 5210,
+      "dCheckDate": "2025-08-02T00:00:00.000Z",
+      "dCheckHours": 3710,
+      "dCheckDueDate": "2027-08-02T00:00:00.000Z",
+      "dCheckDueHours": 6710,
+      "pohDate": "2021-11-26T00:00:00.000Z",
+      "pohDueDate": "2027-11-26T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2025-11-05T00:00:00.000Z",
+      "dueDate": "2026-11-05T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": "2026-05-10T00:00:00.000Z",
+      "currentHours": 3533,
+      "dueHours": 5533
+    },
+    "startingBattery": {
+      "make": "BHARAT",
+      "commissionDate": "2026-04-25T00:00:00.000Z",
+      "dueDate": "2030-10-25T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": "HBL",
+      "commissionDate": "2021-11-26T00:00:00.000Z",
+      "dueDate": "2026-05-26T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "ESCORTS",
+      "serviceDate": "2026-05-24T00:00:00.000Z",
+      "serviceHours": 700,
+      "dueHours": 1000
+    },
+    "failures": [],
+    "createdAt": "2026-07-14T06:46:16.047Z",
+    "updatedAt": "2026-08-11T03:17:08.186Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74be4a489a96176faf3bf6",
+    "depot": "ULL",
+    "towerCarNumber": "RVNL-18037",
+    "towerCar": {
+      "type": "8 Wheeler / DETC",
+      "make": "ICF",
+      "doc": "2022-02-23T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-07-16T00:00:00.000Z",
+      "dueDate": "2026-08-30T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2025-08-23T00:00:00.000Z",
+      "bCheckHours": 4176,
+      "bCheckDueDate": "2026-09-07T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2026-03-07T00:00:00.000Z",
+      "cCheckHours": 5063,
+      "cCheckDueDate": "2027-03-07T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2022-02-23T00:00:00.000Z",
+      "pohDueDate": "2028-02-23T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-03-26T00:00:00.000Z",
+      "dueDate": "2027-03-26T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "Microtex",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "lightingBattery": {
+      "make": "Amararaja",
+      "commissionDate": "2021-06-21T00:00:00.000Z",
+      "dueDate": "2025-06-21T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "Escorts",
+      "serviceDate": null,
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [],
+    "createdAt": "2026-08-06T17:03:06.080Z",
+    "updatedAt": "2026-08-13T10:35:11.506Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74bfae489a96176faf3c18",
+    "depot": "POY",
+    "towerCarNumber": "SR 9505",
+    "towerCar": {
+      "type": "4 Wheeler / DHTC",
+      "make": "JBPL",
+      "doc": null
+    },
+    "brakePower": {
+      "issueDate": "2026-06-03T00:00:00.000Z",
+      "dueDate": "2026-07-18T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "Cummins N 743 L",
+      "bCheckDate": "2026-12-06T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2026-12-27T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2026-06-27T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2026-06-27T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2026-07-01T00:00:00.000Z",
+      "pohDueDate": null,
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-02-12T00:00:00.000Z",
+      "dueDate": "2026-02-12T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "lightingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "generator": {
+      "make": "",
+      "serviceDate": null,
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [],
+    "createdAt": "2026-08-06T17:09:02.033Z",
+    "updatedAt": "2026-08-06T17:09:02.033Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c00f489a96176faf3c1f",
+    "depot": "CHV",
+    "towerCarNumber": "RU 190049",
+    "towerCar": {
+      "type": "8 Wheeler / DETC",
+      "make": "ICF",
+      "doc": "2019-10-14T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-02-16T00:00:00.000Z",
+      "dueDate": "2026-02-02T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2025-08-22T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2026-02-21T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2025-05-09T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2026-05-09T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": null,
+      "pohDueDate": null,
+      "pohRemarks": "Under POH"
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2025-11-26T00:00:00.000Z",
+      "dueDate": "2026-11-26T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "MICROTEX",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "lightingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "generator": {
+      "make": "ESCORTS, 10 KVA",
+      "serviceDate": null,
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [
+      {
+        "component": "",
+        "description": "Failures in last 3 years with component and date",
+        "failureDate": null
+      }
+    ],
+    "createdAt": "2026-08-06T17:10:39.830Z",
+    "updatedAt": "2026-08-06T17:10:39.830Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c0d6489a96176faf3c5f",
+    "depot": "NIL",
+    "towerCarNumber": "SR 200074",
+    "towerCar": {
+      "type": "8 Wheeler / DETC",
+      "make": "DMW / PTA",
+      "doc": "2021-05-21T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-06-25T00:00:00.000Z",
+      "dueDate": "2026-08-09T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2026-04-18T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2026-10-18T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": null,
+      "cCheckHours": null,
+      "cCheckDueDate": null,
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2026-05-21T00:00:00.000Z",
+      "pohDueDate": null,
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2025-02-03T00:00:00.000Z",
+      "dueDate": "2026-02-03T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "lightingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "generator": {
+      "make": "",
+      "serviceDate": null,
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [],
+    "createdAt": "2026-08-06T17:13:58.095Z",
+    "updatedAt": "2026-08-06T17:13:58.095Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c1af489a96176faf3cd2",
+    "depot": "CS",
+    "towerCarNumber": "SR-210049",
+    "towerCar": {
+      "type": "8 Wheeler ",
+      "make": "DMW / PTA",
+      "doc": "2021-09-29T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-07-16T00:00:00.000Z",
+      "dueDate": "2026-08-30T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2026-03-27T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2027-01-20T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2026-07-21T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2027-07-21T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2021-09-20T00:00:00.000Z",
+      "pohDueDate": "2027-07-29T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2025-11-25T00:00:00.000Z",
+      "dueDate": "2026-11-29T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "MICROTEX 24V, 450Ah",
+      "commissionDate": "2021-05-15T00:00:00.000Z",
+      "dueDate": "2025-05-15T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": " HBL",
+      "commissionDate": "2021-04-15T00:00:00.000Z",
+      "dueDate": "2025-04-15T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "Escorts ",
+      "serviceDate": "2025-09-13T00:00:00.000Z",
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [],
+    "createdAt": "2026-08-06T17:17:35.509Z",
+    "updatedAt": "2026-08-06T17:17:35.509Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c31a489a96176faf3d57",
+    "depot": "PGT",
+    "towerCarNumber": "SR 230066",
+    "towerCar": {
+      "type": "8 Wheeler / DETC",
+      "make": "ICF / Chennai",
+      "doc": "2023-11-01T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-06-20T00:00:00.000Z",
+      "dueDate": "2026-08-04T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2026-07-04T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2027-01-03T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2025-12-03T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2026-12-03T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2023-11-01T00:00:00.000Z",
+      "pohDueDate": "2029-10-31T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2025-10-19T00:00:00.000Z",
+      "dueDate": "2026-10-19T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "Microtex",
+      "commissionDate": "2026-06-01T00:00:00.000Z",
+      "dueDate": null
+    },
+    "lightingBattery": {
+      "make": "HBL",
+      "commissionDate": "2022-05-01T00:00:00.000Z",
+      "dueDate": "2027-05-01T00:00:00.000Z"
+    },
+    "generator": {
+      "make": "ESCORTS",
+      "serviceDate": "2025-11-06T00:00:00.000Z",
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [],
+    "createdAt": "2026-08-06T17:23:38.986Z",
+    "updatedAt": "2026-08-06T17:23:38.986Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c499489a96176faf3d80",
+    "depot": "QLD",
+    "towerCarNumber": "RU 17877",
+    "towerCar": {
+      "type": "8 Wheeler / DETC",
+      "make": "ICF",
+      "doc": null
+    },
+    "brakePower": {
+      "issueDate": "2026-07-23T00:00:00.000Z",
+      "dueDate": "2026-09-06T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2026-03-26T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2026-09-25T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2025-01-24T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2026-11-24T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2024-01-31T00:00:00.000Z",
+      "pohDueDate": "2030-01-30T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-01-15T00:00:00.000Z",
+      "dueDate": "2027-01-15T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "CELTEK",
+      "commissionDate": "2021-12-15T00:00:00.000Z",
+      "dueDate": "2029-07-22T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": "HBL 110V, 120Ah",
+      "commissionDate": "2023-05-22T00:00:00.000Z",
+      "dueDate": null
+    },
+    "generator": {
+      "make": "",
+      "serviceDate": "2026-04-12T00:00:00.000Z",
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [
+      {
+        "component": "",
+        "description": "Failures in last 3 years with component and date",
+        "failureDate": null
+      }
+    ],
+    "createdAt": "2026-08-06T17:30:01.443Z",
+    "updatedAt": "2026-08-06T17:30:01.443Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c543489a96176faf3dae",
+    "depot": "SRR",
+    "towerCarNumber": "SR 210080",
+    "towerCar": {
+      "type": "15505704613",
+      "make": "ICF",
+      "doc": "2022-02-17T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-06-23T00:00:00.000Z",
+      "dueDate": "2026-08-07T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "15505704613",
+      "bCheckDate": "2026-02-17T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2026-08-19T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2026-07-07T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2026-07-07T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2022-02-17T00:00:00.000Z",
+      "pohDueDate": "2027-02-01T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-02-11T00:00:00.000Z",
+      "dueDate": "2027-02-11T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "Microtex 24v",
+      "commissionDate": "2021-10-01T00:00:00.000Z",
+      "dueDate": "2025-10-01T00:00:00.000Z"
+    },
+    "lightingBattery": {
+      "make": "AMAR RAJA 10/2021",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "generator": {
+      "make": "",
+      "serviceDate": "2024-05-25T00:00:00.000Z",
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [
+      {
+        "component": "Repercussions",
+        "description": "Two trains detained",
+        "failureDate": null
+      }
+    ],
+    "createdAt": "2026-08-06T17:32:51.688Z",
+    "updatedAt": "2026-08-06T17:32:51.688Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a74c5bd489a96176faf3dc1",
+    "depot": "TIR",
+    "towerCarNumber": "RU 17878",
+    "towerCar": {
+      "type": "8 Wheeler / DETC",
+      "make": "ICF / Chennai",
+      "doc": "2018-03-28T00:00:00.000Z"
+    },
+    "brakePower": {
+      "issueDate": "2026-07-03T00:00:00.000Z",
+      "dueDate": "2026-08-17T00:00:00.000Z"
+    },
+    "engine": {
+      "make": "CumminsNTA-885-R",
+      "bCheckDate": "2026-02-21T00:00:00.000Z",
+      "bCheckHours": null,
+      "bCheckDueDate": "2026-08-23T00:00:00.000Z",
+      "bCheckDueHours": null,
+      "cCheckDate": "2025-08-16T00:00:00.000Z",
+      "cCheckHours": null,
+      "cCheckDueDate": "2026-08-16T00:00:00.000Z",
+      "cCheckDueHours": null,
+      "dCheckDate": null,
+      "dCheckHours": null,
+      "dCheckDueDate": null,
+      "dCheckDueHours": null,
+      "pohDate": "2024-06-15T00:00:00.000Z",
+      "pohDueDate": "2030-06-14T00:00:00.000Z",
+      "pohRemarks": ""
+    },
+    "ultrasonicTesting": {
+      "doneDate": "2026-07-24T00:00:00.000Z",
+      "dueDate": "2027-07-24T00:00:00.000Z"
+    },
+    "hydraulicReplacement": {
+      "changeDate": null,
+      "currentHours": null,
+      "dueHours": null
+    },
+    "startingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "lightingBattery": {
+      "make": "",
+      "commissionDate": null,
+      "dueDate": null
+    },
+    "generator": {
+      "make": "ESCORTS, 10 KVA",
+      "serviceDate": "2026-03-01T00:00:00.000Z",
+      "serviceHours": null,
+      "dueHours": null
+    },
+    "failures": [
+      {
+        "component": "",
+        "description": "Failures in last 3 years with component and date",
+        "failureDate": null
+      }
+    ],
+    "createdAt": "2026-08-06T17:34:53.418Z",
+    "updatedAt": "2026-08-06T17:34:53.418Z",
+    "__v": 0
+  }
+]

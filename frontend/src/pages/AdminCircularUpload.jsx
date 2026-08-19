@@ -1,10 +1,9 @@
 import { useState } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
 import Swal from "sweetalert2";
-import { UploadCloud, FileText } from "lucide-react";
-import Footer from "../components/Footer";
+import { UploadCloud, FileText, FileUp } from "lucide-react";
 import BackButton from "../components/BackButton";
+import CustomDatePicker from "../components/CustomDatePicker";
 
 export default function AdminCircularUpload() {
   const [title, setTitle] = useState("");
@@ -39,22 +38,29 @@ export default function AdminCircularUpload() {
 
   return (
     <>
-      <Navbar />
 
-      <div className="min-h-screen bg-slate-100 p-6">
- 
-        <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-md">
-       <BackButton/>
-          {/* HEADER */}
-          <div className="my-6">
-            <h2 className="text-xl font-bold text-gray-800">
-              Upload Official Circular
-            </h2>
-            <p className="text-sm text-gray-500">
-              Upload PDF circulars for drivers and depot managers
-            </p>
+      <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-7xl mx-auto space-y-6">
+        <BackButton />
+        
+        {/* ================= HEADER ================= */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-slate-100 rounded-xl text-[#0b659a] flex-shrink-0">
+              <FileUp size={28} />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+                Upload Official Circular
+              </h2>
+              <p className="text-sm text-slate-500 mt-1 font-medium">
+                Upload PDF circulars for drivers and depot managers
+              </p>
+            </div>
           </div>
+        </div>
 
+        {/* ================= FORM CARD ================= */}
+        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm max-w-3xl mx-auto">
           {/* TITLE INPUT */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -65,22 +71,27 @@ export default function AdminCircularUpload() {
               placeholder="e.g. Safety Guidelines – Jan 2026"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0b659a]"
             />
           </div>
 
           {/* DATE INPUT */}
-<div className="mb-5">
-  <label className="block text-sm font-medium text-gray-700 mb-1">
+<div className="mb-6">
+  <label className="block text-sm font-medium text-gray-700 mb-2">
     Circular Date
   </label>
-  <input
-    type="date"
-    value={circularDate}
-    onChange={e => setCircularDate(e.target.value)}
-    className="w-full border rounded-lg px-3 py-2 
-               focus:outline-none focus:ring-2 focus:ring-indigo-500"
-  />
+    <div className="relative">
+      <CustomDatePicker
+        value={circularDate}
+        onChange={(v) => setCircularDate(v)}
+        className="w-full border border-gray-300 rounded-xl px-4 py-2.5 
+                   text-gray-700 bg-white shadow-sm
+                   hover:border-[#0b659a]/40 focus:outline-none 
+                   focus:ring-2 focus:ring-[#0b659a]/20 focus:border-[#0b659a]
+                   transition-all duration-200"
+        placeholderText="DD/MM/YYYY"
+      />
+  </div>
 </div>
 
           {/* FILE UPLOAD */}
@@ -91,11 +102,11 @@ export default function AdminCircularUpload() {
 
             <label
               className="flex flex-col items-center justify-center gap-2
-                         border-2 border-dashed border-indigo-300
+                         border-2 border-dashed border-[#0b659a]/40
                          rounded-xl p-6 cursor-pointer
-                         hover:bg-indigo-50 transition"
+                         hover:bg-[#0b659a]/10 transition"
             >
-              <UploadCloud className="text-indigo-600" size={36} />
+              <UploadCloud className="text-[#0b659a]" size={36} />
               <span className="text-sm text-gray-600">
                 Click to select PDF file
               </span>
@@ -114,7 +125,7 @@ export default function AdminCircularUpload() {
             {/* FILE NAME */}
             {pdf && (
               <div className="mt-3 flex items-center gap-2 text-sm text-gray-700">
-                <FileText size={18} className="text-indigo-600" />
+                <FileText size={18} className="text-[#0b659a]" />
                 <span className="truncate">{pdf.name}</span>
               </div>
             )}
@@ -125,8 +136,8 @@ export default function AdminCircularUpload() {
             onClick={upload}
             disabled={loading}
             className="w-full flex items-center justify-center gap-2
-                       bg-indigo-600 text-white py-2.5 rounded-lg
-                       font-medium hover:bg-indigo-700
+                       bg-[#0b659a] text-white py-2.5 rounded-lg
+                       font-medium hover:bg-[#09527d]
                        disabled:opacity-60 transition"
           >
             {loading ? "Uploading..." : "Upload Circular"}
@@ -134,7 +145,7 @@ export default function AdminCircularUpload() {
 
         </div>
       </div>
-      <Footer/>
+      
     </>
   );
 }

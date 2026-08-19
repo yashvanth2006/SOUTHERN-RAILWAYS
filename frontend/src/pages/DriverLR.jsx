@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import Swal from "sweetalert2";
 import { Calendar, Layers, Route } from "lucide-react";
-import Footer from "../components/Footer";
-
+import CustomDatePicker from "../components/CustomDatePicker";
+import CustomSelect from "../components/CustomSelect";
 const calculateSchedule = (start, end) => {
   if (!start || !end) return "";
 
@@ -34,7 +33,7 @@ const calculateSchedule = (start, end) => {
 
 export default function DriverLR() {
   const [lrList, setLrList] = useState([]);
-  const DEPOTS = ["PTJ", "PGT", "POY", "ED", "CBE", "MTP", "SA", "JTJ", "KRR", "TPJ", "DG", "MTDM", "VRI", "DPJ"];
+  const [depots, setDepots] = useState([]);
 
   const [lr, setLr] = useState({
     startDepot: "",
@@ -89,12 +88,27 @@ export default function DriverLR() {
       }
     };
 
+    const loadDepots = async () => {
+      try {
+        const res = await api.get("/driver/lr-depots");
+        setDepots(res.data || []);
+      } catch (err) {
+        console.error("Failed to load depots", err);
+      }
+    };
+
     loadLR();
+    loadDepots();
   }, []);
 
   const save = async () => {
     if (!lr.startDepot || !lr.endDepot || !lr.doneDate || !lr.dueDate) {
       Swal.fire("Missing Info", "Section, Done & Due Date required", "warning");
+      return;
+    }
+
+    if (lr.startDepot === lr.endDepot) {
+      Swal.fire("Invalid Route", "Select a different depot.", "warning");
       return;
     }
 
@@ -127,7 +141,6 @@ export default function DriverLR() {
 
   return (
     <>
-      <Navbar />
       <div className="rail-page">
         <div className="mx-auto max-w-5xl">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -140,14 +153,14 @@ export default function DriverLR() {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-[#D1D5DB] bg-[#E8EEF5] px-4 py-3 text-sm text-[#0B3C5D]">
+            <div className="rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#E8EEF5] px-4 py-3 text-sm text-[#0B3C5D]">
               <p className="font-semibold">Learning history</p>
               <p className="text-[#1F6F8B]">Maintain route compliance</p>
             </div>
           </div>
 
           <div className="rail-panel p-4 sm:p-6 md:p-8">
-            <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+            <div className="mb-5 flex items-center gap-3 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E8EEF5] text-[#0B3C5D]">
                 <Route size={18} />
               </div>
@@ -159,33 +172,38 @@ export default function DriverLR() {
 
             <div className="space-y-4">
               {lrList.map((item, idx) => (
-                <div key={idx} className="rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+                <div key={idx} className="rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4">
                   <div className="mb-2 flex items-center gap-2 text-[#1F2937]">
                     <Layers size={16} className="text-[#1F6F8B]" />
                     <p className="font-semibold">{item.section}</p>
                   </div>
                   <p className="text-sm text-[#6B7280]">Done: {item.doneDate?.substring(0, 10)} | Due: {item.dueDate?.substring(0, 10)}</p>
-                  <p className="mt-1 text-sm text-[#1F6F8B]">Schedule: {item.schedule || "-"}</p>
+                  <p className="mt-1 text-sm text-[#1F6F8B]">Schedule: 3 months</p>
+                  <p className="mt-1 text-sm text-[#1F6F8B]">Schedule: {item.schedule}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 space-y-4 rounded-2xl border border-[#D1D5DB] bg-white p-4 sm:p-5">
+            <div className="mt-6 space-y-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-white p-4 sm:p-5">
               <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#1F2937]">Start station</label>
-                  <select value={lr.startDepot} onChange={e => setLr(prev => ({ ...prev, startDepot: e.target.value }))} className="rail-input">
-                    <option value="">Select Start station</option>
-                    {DEPOTS.map(d => <option key={d}>{d}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#1F2937]">End Station</label>
-                  <select value={lr.endDepot} onChange={e => setLr(prev => ({ ...prev, endDepot: e.target.value }))} className="rail-input">
-                    <option value="">Select End Station</option>
-                    {DEPOTS.map(d => <option key={d}>{d}</option>)}
-                  </select>
-                </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#1F2937]">Start station</label>
+                    <CustomSelect
+                      value={lr.startDepot}
+                      onChange={v => setLr(prev => ({ ...prev, startDepot: v }))}
+                      options={depots}
+                      placeholder="Select Start station"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#1F2937]">End Station</label>
+                    <CustomSelect
+                      value={lr.endDepot}
+                      onChange={v => setLr(prev => ({ ...prev, endDepot: v }))}
+                      options={depots}
+                      placeholder="Select End Station"
+                    />
+                  </div>
               </div>
 
               <DateField label="Done Date" value={lr.doneDate} onChange={v => setLr(prev => ({ ...prev, doneDate: v }))} />
@@ -198,7 +216,7 @@ export default function DriverLR() {
           </div>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }
@@ -209,7 +227,14 @@ function DateField({ label, value, onChange }) {
       <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#1F2937]">
         <Calendar size={14} /> {label}
       </label>
-      <input type="date" value={value} onChange={e => onChange(e.target.value)} className="rail-input" />
+      <div className="w-full">
+        <CustomDatePicker
+          value={value}
+          onChange={onChange}
+          className="rail-input w-full"
+          placeholderText="DD/MM/YYYY"
+        />
+      </div>
     </div>
   );
 }

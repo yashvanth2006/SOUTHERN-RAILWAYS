@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import Swal from "sweetalert2";
 import { HeartPulse, Calendar, ClipboardCheck } from "lucide-react";
-import Footer from "../components/Footer";
-
+import CustomDatePicker from "../components/CustomDatePicker";
 const TRAINING_KEYS = ["PME", "GRS_RC", "TR4", "OC"];
 
 const calculateSchedule = (start, end) => {
@@ -132,7 +130,6 @@ export default function DriverHealth() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="rail-page flex items-center justify-center">
           <div className="rail-card px-8 py-6 text-[#6B7280]">Loading training details...</div>
         </div>
@@ -142,7 +139,6 @@ export default function DriverHealth() {
 
   return (
     <>
-      <Navbar />
       <div className="rail-page">
         <div className="mx-auto max-w-5xl">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -155,14 +151,14 @@ export default function DriverHealth() {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-[#D1D5DB] bg-[#E8EEF5] px-4 py-3 text-sm text-[#0B3C5D]">
+            <div className="rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#E8EEF5] px-4 py-3 text-sm text-[#0B3C5D]">
               <p className="font-semibold">Compliance status</p>
               <p className="text-[#1F6F8B]">Track upcoming renewals</p>
             </div>
           </div>
 
           <div className="rail-panel p-4 sm:p-6 md:p-8">
-            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E8EEF5] text-[#0B3C5D]">
                 <HeartPulse size={20} />
               </div>
@@ -193,7 +189,7 @@ export default function DriverHealth() {
           </div>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }
@@ -209,16 +205,16 @@ function TrainingSection({ title, data, onChange }) {
     const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
     if (daysLeft < 0) {
-      statusBox = <div className="mb-4 rounded-2xl border border-[#F5C2C7] bg-[#FFF5F5] p-3 text-sm font-medium text-[#C62828]">Overdue by {Math.abs(daysLeft)} days</div>;
+      statusBox = <div className="mb-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#F5C2C7] bg-[#FFF5F5] p-3 text-sm font-medium text-[#C62828]">Overdue by {Math.abs(daysLeft)} days</div>;
     } else if (daysLeft <= 30) {
-      statusBox = <div className="mb-4 rounded-2xl border border-[#F9DDA8] bg-[#FFF8E1] p-3 text-sm font-medium text-[#F9A825]">Expiring in {daysLeft} days</div>;
+      statusBox = <div className="mb-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#F9DDA8] bg-[#FFF8E1] p-3 text-sm font-medium text-[#F9A825]">Expiring in {daysLeft} days</div>;
     } else {
-      statusBox = <div className="mb-4 rounded-2xl border border-[#C8E6C9] bg-[#F1F8E9] p-3 text-sm font-medium text-[#2E7D32]">Valid till {data.dueDate}</div>;
+      statusBox = <div className="mb-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#C8E6C9] bg-[#F1F8E9] p-3 text-sm font-medium text-[#2E7D32]">Valid till {data.dueDate}</div>;
     }
   }
 
   return (
-    <div className="rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4 sm:p-5">
+    <div className="rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4 sm:p-5">
       <div className="mb-4 flex items-center gap-2">
         <ClipboardCheck size={18} className="text-[#1F6F8B]" />
         <h3 className="text-lg font-semibold text-[#1F2937]">{title}</h3>
@@ -248,7 +244,14 @@ function DateField({ label, value, onChange }) {
       <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#1F2937]">
         <Calendar size={14} /> {label}
       </label>
-      <input type="date" value={value} onChange={e => onChange(e.target.value)} className="rail-input" />
+      <div className="w-full">
+        <CustomDatePicker
+          value={value}
+          onChange={onChange}
+          className="rail-input w-full"
+          placeholderText="DD/MM/YYYY"
+        />
+      </div>
     </div>
   );
 }

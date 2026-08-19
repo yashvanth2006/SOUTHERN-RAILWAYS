@@ -1,0 +1,17 @@
+{
+  "name": "railway-department",
+  "version": "1.0.0",
+  "description": "A centralized MERN Stack web application designed to digitize railway operational workflows, replacing manual paperwork with a secure, role-based digital platform.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  }
+}

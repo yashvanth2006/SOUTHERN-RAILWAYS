@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
-import Footer from "../components/Footer";
 import api from "../api/axios";
 import EngineDetails from "../components/EngineDetails";
 import Swal from "sweetalert2";
 import EngineFormModal from "../components/EngineFormModal";
+import CustomSelect from "../components/CustomSelect";
 import {
   Settings,
   Building2,
@@ -26,25 +25,7 @@ const assignedDepots = JSON.parse(
   localStorage.getItem("assignedDepots") || "[]"
 );
 
-const [selectedDepot, setSelectedDepot] = useState(() => {
-
-  if (role === "DRIVER") {
-    return depotName;
-  }
-
-  if (role === "DEPOT_MANAGER") {
-    return depotName;
-  }
-
-  if (role === "ADEE") {
-    return assignedDepots.length
-      ? assignedDepots[0]
-      : "";
-  }
-
-  return "";
-
-});
+const [selectedDepot, setSelectedDepot] = useState("");
 
   const [engineList, setEngineList] = useState([]);
 const [availableDepots, setAvailableDepots] = useState([]);
@@ -142,7 +123,7 @@ const [expandedEngine, setExpandedEngine] = useState(null);
     role === "SUPER_ADMIN";
 
   const canCreate =
-    role === "SUPER_ADMIN";
+    role === "DEPOT_MANAGER";
 
   useEffect(() => {
 
@@ -303,14 +284,11 @@ const deleteEngine = async (engine) => {
 
   return (
     <>
-      <Navbar />
-
-    <div className="max-w-7xl mx-auto space-y-8">
-      
-        <div className="max-w-7xl md:my-4 mx-auto space-y-8">
-<BackButton/>
+      <div className="min-h-screen bg-[#F8FAFC] px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <BackButton/>
           {/* ================= HEADER ================= */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm">
             {/* LEFT */}
             <div className="flex items-center gap-4">
               <div className="flex items-start gap-4">
@@ -336,7 +314,7 @@ const deleteEngine = async (engine) => {
                   setFormData(emptyEngine);
                   setShowModal(true);
                 }}
-                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
+                className="w-full sm:w-auto bg-[#0b659a] hover:bg-[#09527d] text-white rounded-xl px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
               >
                 <Plus size={18} />
                 New Tower wagons
@@ -345,57 +323,45 @@ const deleteEngine = async (engine) => {
           </div>
 
           {/* FILTERS */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <div className="bg-white rounded-2xl shadow-sm p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* DEPOT */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Depot
-                </label>
-                <select
-                  value={selectedDepot}
-                  onChange={(e) => setSelectedDepot(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none transition-all cursor-pointer"
-                >
-                  <option value="">Select Depot</option>
-                 {allDepots.map(depot => (
-  <option
-    key={depot}
-    value={depot}
-  >
-    {depot}
-  </option>
-))}
-                </select>
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Depot
+                  </label>
+                  <CustomSelect
+                    value={selectedDepot}
+                    onChange={setSelectedDepot}
+                    options={[
+                      { value: "", label: "Select Depot" },
+                      ...allDepots.map(depot => ({ value: depot, label: depot }))
+                    ]}
+                    placeholder="Select Depot"
+                  />
+                </div>
 
               {/* TOWER CAR */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Tower Car
-                </label>
-                <select
-                  value={selectedTowerCar}
-                  onChange={(e)=>setSelectedTowerCar(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none transition-all cursor-pointer"
-                >
-                  <option value="">Select Tower Car</option>
-                  {availableTowerCars.map(item => (
-  <option
-    key={item._id}
-    value={item._id}
-  >
-    {item.towerCarNumber}
-  </option>
-))}
-                </select>
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Tower Car
+                  </label>
+                  <CustomSelect
+                    value={selectedTowerCar}
+                    onChange={setSelectedTowerCar}
+                    options={[
+                      { value: "", label: "Select Tower Car" },
+                      ...availableTowerCars.map(item => ({ value: item._id, label: item.towerCarNumber }))
+                    ]}
+                    placeholder="Select Tower Car"
+                  />
+                </div>
             </div>
           </div>
 
           {/* ================= ENGINE LIST ================= */}
 
-<div className="bg-white rounded-2xl shadow-sm border border-slate-100">
+<div className="bg-white rounded-2xl shadow-sm">
 
   <div className="px-6 py-5 border-b border-slate-200">
 
@@ -580,6 +546,7 @@ const deleteEngine = async (engine) => {
         onClose={() => setShowModal(false)}
         formData={formData}
         setFormData={setFormData}
+        depotOptions={allDepots}
         isEdit={isEdit}
    refresh={async () => {
 
@@ -591,7 +558,7 @@ const deleteEngine = async (engine) => {
 
 }}
       />
-      <Footer />
+      
 
     </>
   );

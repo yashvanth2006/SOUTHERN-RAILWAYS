@@ -1,87 +1,100 @@
 import api from "../api/axios";
+import React from "react";
 import Swal from "sweetalert2";
+import CustomDatePicker from "../components/CustomDatePicker";
+import CustomSelect from "../components/CustomSelect";
 
 export default function EngineFormModal({
   open,
   onClose,
   formData,
   setFormData,
+  depotOptions = [],
   isEdit,
   refresh
 }) {
 
+  const [towerCars, setTowerCars] = React.useState([]);
 
-    const saveEngine = async () => {
+  React.useEffect(() => {
+    if (open) {
+      api.get("/engine/tower-cars/list")
+        .then(res => setTowerCars(res.data || []))
+        .catch(err => console.error(err));
+    }
+  }, [open]);
 
-  try{
+  const saveEngine = async () => {
 
-    if(isEdit){
+    try {
 
-      await api.put(
+      if (isEdit) {
 
-        `/engine/${formData._id}`,
+        await api.put(
 
-        formData
+          `/engine/${formData._id}`,
 
-      );
+          formData
+
+        );
+
+        Swal.fire(
+
+          "Updated",
+
+          "Engine updated successfully",
+
+          "success"
+
+        );
+
+      }
+
+      else {
+
+        await api.post(
+
+          "/engine",
+
+          formData
+
+        );
+
+        Swal.fire(
+
+          "Created",
+
+          "Engine created successfully",
+
+          "success"
+
+        );
+
+      }
+
+      refresh();
+
+      onClose();
+
+    }
+
+    catch (err) {
 
       Swal.fire(
 
-        "Updated",
+        "Error",
 
-        "Engine updated successfully",
+        err.response?.data?.msg ||
 
-        "success"
+        "Unable to save",
+
+        "error"
 
       );
 
     }
 
-    else{
-
-      await api.post(
-
-        "/engine",
-
-        formData
-
-      );
-
-      Swal.fire(
-
-        "Created",
-
-        "Engine created successfully",
-
-        "success"
-
-      );
-
-    }
-
-    refresh();
-
-    onClose();
-
-  }
-
-  catch(err){
-
-    Swal.fire(
-
-      "Error",
-
-      err.response?.data?.msg ||
-
-      "Unable to save",
-
-      "error"
-
-    );
-
-  }
-
-};
+  };
   if (!open) return null;
 
   return (
@@ -110,994 +123,948 @@ export default function EngineFormModal({
 
         {/* BODY */}
 
-{/* BODY */}
+        {/* BODY */}
 
-<div className="p-6 space-y-8">
+        <div className="p-6 space-y-8">
 
-  {/* ================= TOWER CAR INFORMATION ================= */}
+          {/* ================= TOWER CAR INFORMATION ================= */}
 
-  <div>
+          <div>
 
-    <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-      TOWER CAR INFORMATION
-    </div>
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              TOWER CAR INFORMATION
+            </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-      {/* DEPOT */}
+              {/* DEPOT */}
 
-      <div>
+              <div>
 
-        <label className="block text-sm font-semibold mb-2">
-          Depot
-        </label>
+                <label className="block text-sm font-semibold mb-2">
+                  Depot
+                </label>
 
-        <select
-          value={formData.depot}
-          onChange={(e)=>
-            setFormData({
-              ...formData,
-              depot:e.target.value
-            })
-          }
-          className="w-full border rounded-lg px-4 py-2"
-        >
+                <CustomSelect
+                  value={formData.depot}
+                  onChange={(v) =>
+                    setFormData({
+                      ...formData,
+                      depot: v
+                    })
+                  }
+                  options={[
+                    { value: "", label: "Select Depot" },
+                    ...depotOptions.map(item => ({ value: item, label: item }))
+                  ]}
+                  placeholder="Select Depot"
+                />
 
-          <option value="">
-            Select Depot
-          </option>
+              </div>
 
-          {[
-            "PTJ","PGT","POY","ED","CBE","MTP",
-            "SA","JTJ","KRR","TPJ","DG",
-            "MTDM","VRI","DPJ"
-          ].map(item=>(
-            <option
-              key={item}
-              value={item}
+              {/* TOWER CAR */}
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Tower Car Number
+                </label>
+
+                <CustomSelect
+                  value={formData.towerCarNumber}
+                  onChange={(v) =>
+                    setFormData({
+                      ...formData,
+                      towerCarNumber: v
+                    })
+                  }
+                  options={[
+                    { value: "", label: "Select Tower Car" },
+                    ...towerCars.map(item => ({ value: item, label: item }))
+                  ]}
+                  placeholder="Select Tower Car"
+                />
+
+              </div>
+
+              {/* TYPE */}
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Type
+                </label>
+
+                <input
+                  value={formData.towerCar.type}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      towerCar: {
+                        ...formData.towerCar,
+                        type: e.target.value
+                      }
+                    })
+                  }
+                  className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2"
+                />
+
+              </div>
+
+              {/* MAKE */}
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Make
+                </label>
+
+                <input
+                  value={formData.towerCar.make}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      towerCar: {
+                        ...formData.towerCar,
+                        make: e.target.value
+                      }
+                    })
+                  }
+                  className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2"
+                />
+
+              </div>
+
+              {/* DOC */}
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  DOC
+                </label>
+                  <CustomDatePicker
+                    value={formData.towerCar.doc}
+                    onChange={(v) => {
+                      setFormData({
+                        ...formData,
+                        towerCar: {
+                          ...formData.towerCar,
+                          doc: v,
+                        },
+                      });
+                    }}
+                    className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    placeholderText="DD/MM/YYYY"
+                  />
+
+              </div>
+
+            </div>
+
+          </div>
+          {/* ================= BRAKE POWER CERTIFICATE ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              BRAKE POWER CERTIFICATE
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Issue Date
+                </label>
+                  <CustomDatePicker
+                    value={formData.brakePower.issueDate}
+                    onChange={(v) => {
+                      setFormData({
+                        ...formData,
+                        brakePower: {
+                          ...formData.brakePower,
+                          issueDate: v,
+                        },
+                      });
+                    }}
+                    className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    placeholderText="DD/MM/YYYY"
+                  />
+
+              </div>
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Due Date
+                </label>
+                  <CustomDatePicker
+                    value={formData.brakePower.dueDate}
+                    onChange={(v) => {
+                      setFormData({
+                        ...formData,
+                        brakePower: {
+                          ...formData.brakePower,
+                          dueDate: v,
+                        },
+                      });
+                    }}
+                    className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    placeholderText="DD/MM/YYYY"
+                  />
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* ================= ENGINE ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              ENGINE
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              {/* MAKE */}
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Make
+                </label>
+
+                <input
+                  value={formData.engine.make}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      engine: {
+                        ...formData.engine,
+                        make: e.target.value
+                      }
+                    })
+                  }
+                  className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2"
+                />
+
+              </div>
+
+            </div>
+
+            {/* ================= B CHECK ================= */}
+
+            <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
+              B CHECK
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <InputDate
+                label="Date"
+                value={formData.engine.bCheckDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      bCheckDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Hours"
+                value={formData.engine.bCheckHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      bCheckHours: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Due Date"
+                value={formData.engine.bCheckDueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      bCheckDueDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Due Hours"
+                value={formData.engine.bCheckDueHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      bCheckDueHours: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+            {/* ================= C CHECK ================= */}
+
+            <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
+              C CHECK
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <InputDate
+                label="Date"
+                value={formData.engine.cCheckDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      cCheckDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Hours"
+                value={formData.engine.cCheckHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      cCheckHours: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Due Date"
+                value={formData.engine.cCheckDueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      cCheckDueDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Due Hours"
+                value={formData.engine.cCheckDueHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      cCheckDueHours: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+            {/* ================= D CHECK ================= */}
+
+            <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
+              D CHECK
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <InputDate
+                label="Date"
+                value={formData.engine.dCheckDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      dCheckDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Hours"
+                value={formData.engine.dCheckHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      dCheckHours: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Due Date"
+                value={formData.engine.dCheckDueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      dCheckDueDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Due Hours"
+                value={formData.engine.dCheckDueHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      dCheckDueHours: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+            {/* ================= POH ================= */}
+
+            <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
+              POH
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              <InputDate
+                label="POH Date"
+                value={formData.engine.pohDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      pohDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="POH Due Date"
+                value={formData.engine.pohDueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    engine: {
+                      ...formData.engine,
+                      pohDueDate: v
+                    }
+                  })
+                }
+              />
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-2">
+                  Remarks
+                </label>
+
+                <input
+                  value={formData.engine.pohRemarks}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      engine: {
+                        ...formData.engine,
+                        pohRemarks: e.target.value
+                      }
+                    })
+                  }
+                  className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2"
+                />
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* ================= ULTRASONIC TESTING ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              ULTRASONIC TESTING
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              <InputDate
+                label="Done Date"
+                value={formData.ultrasonicTesting.doneDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    ultrasonicTesting: {
+                      ...formData.ultrasonicTesting,
+                      doneDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Due Date"
+                value={formData.ultrasonicTesting.dueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    ultrasonicTesting: {
+                      ...formData.ultrasonicTesting,
+                      dueDate: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+          </div>
+
+          {/* ================= HYDRAULIC OIL REPLACEMENT ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              HYDRAULIC OIL REPLACEMENT
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              <InputDate
+                label="Change Date"
+                value={formData.hydraulicReplacement.changeDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    hydraulicReplacement: {
+                      ...formData.hydraulicReplacement,
+                      changeDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Current Hours"
+                value={formData.hydraulicReplacement.currentHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    hydraulicReplacement: {
+                      ...formData.hydraulicReplacement,
+                      currentHours: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Due Hours"
+                value={formData.hydraulicReplacement.dueHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    hydraulicReplacement: {
+                      ...formData.hydraulicReplacement,
+                      dueHours: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+          </div>
+
+          {/* ================= STARTING BATTERY ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              STARTING BATTERY
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              <InputText
+                label="Make"
+                value={formData.startingBattery.make}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    startingBattery: {
+                      ...formData.startingBattery,
+                      make: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Commission Date"
+                value={formData.startingBattery.commissionDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    startingBattery: {
+                      ...formData.startingBattery,
+                      commissionDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Due Date"
+                value={formData.startingBattery.dueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    startingBattery: {
+                      ...formData.startingBattery,
+                      dueDate: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+          </div>
+
+          {/* ================= LIGHTING BATTERY ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              LIGHTING BATTERY
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              <InputText
+                label="Make"
+                value={formData.lightingBattery.make}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    lightingBattery: {
+                      ...formData.lightingBattery,
+                      make: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Commission Date"
+                value={formData.lightingBattery.commissionDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    lightingBattery: {
+                      ...formData.lightingBattery,
+                      commissionDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Due Date"
+                value={formData.lightingBattery.dueDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    lightingBattery: {
+                      ...formData.lightingBattery,
+                      dueDate: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+          </div>
+
+          {/* ================= GENERATOR ================= */}
+
+          <div>
+
+            <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              GENERATOR
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+
+              <InputText
+                label="Make"
+                value={formData.generator.make}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    generator: {
+                      ...formData.generator,
+                      make: v
+                    }
+                  })
+                }
+              />
+
+              <InputDate
+                label="Service Date"
+                value={formData.generator.serviceDate}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    generator: {
+                      ...formData.generator,
+                      serviceDate: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Service Hours"
+                value={formData.generator.serviceHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    generator: {
+                      ...formData.generator,
+                      serviceHours: v
+                    }
+                  })
+                }
+              />
+
+              <InputNumber
+                label="Due Hours"
+                value={formData.generator.dueHours}
+                onChange={(v) =>
+                  setFormData({
+                    ...formData,
+                    generator: {
+                      ...formData.generator,
+                      dueHours: v
+                    }
+                  })
+                }
+              />
+
+            </div>
+
+          </div>
+
+          {/* ================= FAILURE HISTORY ================= */}
+
+          <div>
+
+            <div className="bg-red-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
+              FAILURE HISTORY
+            </div>
+
+            {formData.failures.map((failure, index) => (
+
+              <div
+                key={index}
+                className="border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg p-4 mb-4 grid md:grid-cols-4 gap-4"
+              >
+
+                <InputText
+                  label="Component"
+                  value={failure.component}
+                  onChange={(v) => {
+
+                    const copy = [...formData.failures];
+
+                    copy[index].component = v;
+
+                    setFormData({
+                      ...formData,
+                      failures: copy
+                    });
+
+                  }}
+                />
+
+                <InputText
+                  label="Description"
+                  value={failure.description}
+                  onChange={(v) => {
+
+                    const copy = [...formData.failures];
+
+                    copy[index].description = v;
+
+                    setFormData({
+                      ...formData,
+                      failures: copy
+                    });
+
+                  }}
+                />
+
+                <InputDate
+                  label="Failure Date"
+                  value={failure.failureDate}
+                  onChange={(v) => {
+
+                    const copy = [...formData.failures];
+
+                    copy[index].failureDate = v;
+
+                    setFormData({
+                      ...formData,
+                      failures: copy
+                    });
+
+                  }}
+                />
+
+                <div className="flex items-end">
+
+                  <button
+
+                    type="button"
+
+                    onClick={() => {
+
+                      const copy = [...formData.failures];
+
+                      copy.splice(index, 1);
+
+                      setFormData({
+                        ...formData,
+                        failures: copy
+                      });
+
+                    }}
+
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg"
+
+                  >
+
+                    Delete
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            ))}
+
+            <button
+
+              type="button"
+
+              onClick={() => {
+
+                setFormData({
+
+                  ...formData,
+
+                  failures: [
+                    ...formData.failures,
+                    {
+                      component: "",
+                      description: "",
+                      failureDate: ""
+                    }
+                  ]
+
+                });
+
+              }}
+
+              className="bg-indigo-600 text-white px-5 py-2 rounded-lg"
+
             >
-              {item}
-            </option>
-          ))}
 
-        </select>
+              + Add Failure
 
-      </div>
+            </button>
 
-      {/* TOWER CAR */}
+          </div>
 
-      <div>
+          {/* ================= FOOTER ================= */}
 
-        <label className="block text-sm font-semibold mb-2">
-          Tower Car Number
-        </label>
+          <div className="flex justify-end gap-3 border-t pt-5">
 
-        <select
-          value={formData.towerCarNumber}
-          onChange={(e)=>
-            setFormData({
-              ...formData,
-              towerCarNumber:e.target.value
-            })
-          }
-          className="w-full border rounded-lg px-4 py-2"
-        >
+            <button
 
-          <option value="">
-            Select Tower Car
-          </option>
+              onClick={onClose}
 
-          {[
-            "RU 927/017",
-            "SR 220035",
-            "SR 210018",
-            "SR 960025",
-            "SR 23025",
-            "SR 240063",
-            "RU 06878",
-            "SR 230022",
-            "SR 210067",
-            "RU 01896",
-            "RU 176019",
-            "SR 230059",
-            "RU 9516",
-            "RU 9514",
-            "RU 9496",
-            "RU 950021"
-          ].map(item=>(
-            <option
-              key={item}
-              value={item}
+              className="px-6 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none"
+
             >
-              {item}
-            </option>
-          ))}
 
-        </select>
+              Cancel
 
-      </div>
+            </button>
 
-      {/* TYPE */}
+            <button
 
-      <div>
+              onClick={saveEngine}
 
-        <label className="block text-sm font-semibold mb-2">
-          Type
-        </label>
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg"
 
-        <input
-          value={formData.towerCar.type}
-          onChange={(e)=>
-            setFormData({
-              ...formData,
-              towerCar:{
-                ...formData.towerCar,
-                type:e.target.value
-              }
-            })
-          }
-          className="w-full border rounded-lg px-4 py-2"
-        />
+            >
 
-      </div>
+              {isEdit ? "Update Engine" : "Create Engine"}
 
-      {/* MAKE */}
+            </button>
 
-      <div>
+          </div>
 
-        <label className="block text-sm font-semibold mb-2">
-          Make
-        </label>
-
-        <input
-          value={formData.towerCar.make}
-          onChange={(e)=>
-            setFormData({
-              ...formData,
-              towerCar:{
-                ...formData.towerCar,
-                make:e.target.value
-              }
-            })
-          }
-          className="w-full border rounded-lg px-4 py-2"
-        />
-
-      </div>
-
-      {/* DOC */}
-
-      <div>
-
-        <label className="block text-sm font-semibold mb-2">
-          DOC
-        </label>
-
-        <input
-          type="date"
-          value={formData.towerCar.doc}
-          onChange={(e)=>
-            setFormData({
-              ...formData,
-              towerCar:{
-                ...formData.towerCar,
-                doc:e.target.value
-              }
-            })
-          }
-          className="w-full border rounded-lg px-4 py-2"
-        />
+        </div>
 
       </div>
 
     </div>
 
-  </div>
-  {/* ================= BRAKE POWER CERTIFICATE ================= */}
 
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    BRAKE POWER CERTIFICATE
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-    <div>
-
-      <label className="block text-sm font-semibold mb-2">
-        Issue Date
-      </label>
-
-      <input
-        type="date"
-        value={formData.brakePower.issueDate}
-        onChange={(e)=>
-          setFormData({
-            ...formData,
-            brakePower:{
-              ...formData.brakePower,
-              issueDate:e.target.value
-            }
-          })
-        }
-        className="w-full border rounded-lg px-4 py-2"
-      />
-
-    </div>
-
-    <div>
-
-      <label className="block text-sm font-semibold mb-2">
-        Due Date
-      </label>
-
-      <input
-        type="date"
-        value={formData.brakePower.dueDate}
-        onChange={(e)=>
-          setFormData({
-            ...formData,
-            brakePower:{
-              ...formData.brakePower,
-              dueDate:e.target.value
-            }
-          })
-        }
-        className="w-full border rounded-lg px-4 py-2"
-      />
-
-    </div>
-
-  </div>
-
-</div>
-
-{/* ================= ENGINE ================= */}
-
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    ENGINE
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-    {/* MAKE */}
-
-    <div>
-
-      <label className="block text-sm font-semibold mb-2">
-        Make
-      </label>
-
-      <input
-        value={formData.engine.make}
-        onChange={(e)=>
-          setFormData({
-            ...formData,
-            engine:{
-              ...formData.engine,
-              make:e.target.value
-            }
-          })
-        }
-        className="w-full border rounded-lg px-4 py-2"
-      />
-
-    </div>
-
-  </div>
-
-  {/* ================= B CHECK ================= */}
-
-  <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
-    B CHECK
-  </h3>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
-    <InputDate
-      label="Date"
-      value={formData.engine.bCheckDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            bCheckDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Hours"
-      value={formData.engine.bCheckHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            bCheckHours:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Due Date"
-      value={formData.engine.bCheckDueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            bCheckDueDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Due Hours"
-      value={formData.engine.bCheckDueHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            bCheckDueHours:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-  {/* ================= C CHECK ================= */}
-
-  <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
-    C CHECK
-  </h3>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
-    <InputDate
-      label="Date"
-      value={formData.engine.cCheckDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            cCheckDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Hours"
-      value={formData.engine.cCheckHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            cCheckHours:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Due Date"
-      value={formData.engine.cCheckDueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            cCheckDueDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Due Hours"
-      value={formData.engine.cCheckDueHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            cCheckDueHours:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-  {/* ================= D CHECK ================= */}
-
-  <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
-    D CHECK
-  </h3>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
-    <InputDate
-      label="Date"
-      value={formData.engine.dCheckDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            dCheckDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Hours"
-      value={formData.engine.dCheckHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            dCheckHours:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Due Date"
-      value={formData.engine.dCheckDueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            dCheckDueDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Due Hours"
-      value={formData.engine.dCheckDueHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            dCheckDueHours:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-  {/* ================= POH ================= */}
-
-  <h3 className="font-bold text-lg mt-8 mb-4 border-b pb-2">
-    POH
-  </h3>
-
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-    <InputDate
-      label="POH Date"
-      value={formData.engine.pohDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            pohDate:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="POH Due Date"
-      value={formData.engine.pohDueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          engine:{
-            ...formData.engine,
-            pohDueDate:v
-          }
-        })
-      }
-    />
-
-    <div>
-
-      <label className="block text-sm font-semibold mb-2">
-        Remarks
-      </label>
-
-      <input
-        value={formData.engine.pohRemarks}
-        onChange={(e)=>
-          setFormData({
-            ...formData,
-            engine:{
-              ...formData.engine,
-              pohRemarks:e.target.value
-            }
-          })
-        }
-        className="w-full border rounded-lg px-4 py-2"
-      />
-
-    </div>
-
-  </div>
-
-</div>
-
-{/* ================= ULTRASONIC TESTING ================= */}
-
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    ULTRASONIC TESTING
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-    <InputDate
-      label="Done Date"
-      value={formData.ultrasonicTesting.doneDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          ultrasonicTesting:{
-            ...formData.ultrasonicTesting,
-            doneDate:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Due Date"
-      value={formData.ultrasonicTesting.dueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          ultrasonicTesting:{
-            ...formData.ultrasonicTesting,
-            dueDate:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-</div>
-
-{/* ================= HYDRAULIC OIL REPLACEMENT ================= */}
-
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    HYDRAULIC OIL REPLACEMENT
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-    <InputDate
-      label="Change Date"
-      value={formData.hydraulicReplacement.changeDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          hydraulicReplacement:{
-            ...formData.hydraulicReplacement,
-            changeDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Current Hours"
-      value={formData.hydraulicReplacement.currentHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          hydraulicReplacement:{
-            ...formData.hydraulicReplacement,
-            currentHours:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Due Hours"
-      value={formData.hydraulicReplacement.dueHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          hydraulicReplacement:{
-            ...formData.hydraulicReplacement,
-            dueHours:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-</div>
-
-{/* ================= STARTING BATTERY ================= */}
-
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    STARTING BATTERY
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-    <InputText
-      label="Make"
-      value={formData.startingBattery.make}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          startingBattery:{
-            ...formData.startingBattery,
-            make:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Commission Date"
-      value={formData.startingBattery.commissionDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          startingBattery:{
-            ...formData.startingBattery,
-            commissionDate:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Due Date"
-      value={formData.startingBattery.dueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          startingBattery:{
-            ...formData.startingBattery,
-            dueDate:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-</div>
-
-{/* ================= LIGHTING BATTERY ================= */}
-
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    LIGHTING BATTERY
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-    <InputText
-      label="Make"
-      value={formData.lightingBattery.make}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          lightingBattery:{
-            ...formData.lightingBattery,
-            make:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Commission Date"
-      value={formData.lightingBattery.commissionDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          lightingBattery:{
-            ...formData.lightingBattery,
-            commissionDate:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Due Date"
-      value={formData.lightingBattery.dueDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          lightingBattery:{
-            ...formData.lightingBattery,
-            dueDate:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-</div>
-
-{/* ================= GENERATOR ================= */}
-
-<div>
-
-  <div className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    GENERATOR
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-
-    <InputText
-      label="Make"
-      value={formData.generator.make}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          generator:{
-            ...formData.generator,
-            make:v
-          }
-        })
-      }
-    />
-
-    <InputDate
-      label="Service Date"
-      value={formData.generator.serviceDate}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          generator:{
-            ...formData.generator,
-            serviceDate:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Service Hours"
-      value={formData.generator.serviceHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          generator:{
-            ...formData.generator,
-            serviceHours:v
-          }
-        })
-      }
-    />
-
-    <InputNumber
-      label="Due Hours"
-      value={formData.generator.dueHours}
-      onChange={(v)=>
-        setFormData({
-          ...formData,
-          generator:{
-            ...formData.generator,
-            dueHours:v
-          }
-        })
-      }
-    />
-
-  </div>
-
-</div>
-
-{/* ================= FAILURE HISTORY ================= */}
-
-<div>
-
-  <div className="bg-red-600 text-white font-bold px-4 py-2 rounded-lg mb-5">
-    FAILURE HISTORY
-  </div>
-
-  {formData.failures.map((failure,index)=>(
-
-    <div
-      key={index}
-      className="border rounded-lg p-4 mb-4 grid md:grid-cols-4 gap-4"
-    >
-
-      <InputText
-        label="Component"
-        value={failure.component}
-        onChange={(v)=>{
-
-          const copy=[...formData.failures];
-
-          copy[index].component=v;
-
-          setFormData({
-            ...formData,
-            failures:copy
-          });
-
-        }}
-      />
-
-      <InputText
-        label="Description"
-        value={failure.description}
-        onChange={(v)=>{
-
-          const copy=[...formData.failures];
-
-          copy[index].description=v;
-
-          setFormData({
-            ...formData,
-            failures:copy
-          });
-
-        }}
-      />
-
-      <InputDate
-        label="Failure Date"
-        value={failure.failureDate}
-        onChange={(v)=>{
-
-          const copy=[...formData.failures];
-
-          copy[index].failureDate=v;
-
-          setFormData({
-            ...formData,
-            failures:copy
-          });
-
-        }}
-      />
-
-      <div className="flex items-end">
-
-        <button
-
-          type="button"
-
-          onClick={()=>{
-
-            const copy=[...formData.failures];
-
-            copy.splice(index,1);
-
-            setFormData({
-              ...formData,
-              failures:copy
-            });
-
-          }}
-
-          className="bg-red-600 text-white px-4 py-2 rounded-lg"
-
-        >
-
-          Delete
-
-        </button>
-
-      </div>
-
-    </div>
-
-  ))}
-
-  <button
-
-    type="button"
-
-    onClick={()=>{
-
-      setFormData({
-
-        ...formData,
-
-        failures:[
-          ...formData.failures,
-          {
-            component:"",
-            description:"",
-            failureDate:""
-          }
-        ]
-
-      });
-
-    }}
-
-    className="bg-indigo-600 text-white px-5 py-2 rounded-lg"
-
-  >
-
-    + Add Failure
-
-  </button>
-
-</div>
-
-{/* ================= FOOTER ================= */}
-
-<div className="flex justify-end gap-3 border-t pt-5">
-
-  <button
-
-    onClick={onClose}
-
-    className="px-6 py-2 rounded-lg border"
-
-  >
-
-    Cancel
-
-  </button>
-
-  <button
-
-    onClick={saveEngine}
-
-    className="bg-indigo-600 text-white px-6 py-2 rounded-lg"
-
-  >
-
-    {isEdit ? "Update Engine" : "Create Engine"}
-
-  </button>
-
-</div>
-
-</div>
-
-      </div>
-
-    </div>
-
-    
   );
 }
 
@@ -1112,13 +1079,11 @@ function InputDate({ label, value, onChange }) {
         {label}
       </label>
 
-      <input
-        type="date"
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full border rounded-lg px-4 py-2
-                   focus:ring-2 focus:ring-indigo-500
-                   focus:outline-none"
+      <CustomDatePicker
+        value={value}
+        onChange={onChange}
+        className="w-full border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        placeholderText="DD/MM/YYYY"
       />
     </div>
   );

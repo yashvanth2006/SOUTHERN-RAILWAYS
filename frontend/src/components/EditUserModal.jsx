@@ -1,16 +1,18 @@
 /**
- * EditUserModal Component
- *
- * Admin-only modal for editing user information.
- * Supports editing both User and DriverProfile data.
- * Well-aligned, responsive UI with tabbed sections.
- *
- * @module components/EditUserModal
- */
+* EditUserModal Component
+*
+* Admin-only modal for editing user information.
+* Supports editing both User and DriverProfile data.
+* Well-aligned, responsive UI with tabbed sections.
+*
+* @module components/EditUserModal
+*/
 
 import { useState, useEffect } from "react";
 import api from "../api/axios";
 import Swal from "sweetalert2";
+import CustomDatePicker from "../components/CustomDatePicker";
+import CustomSelect from "../components/CustomSelect";
 import {
   X,
   User,
@@ -58,6 +60,31 @@ export default function EditUserModal({ userId, onClose, onSuccess }) {
   });
 
   const isDriver = formData.role === "DRIVER";
+
+  // Role hierarchy configuration
+  const ROLE_HIERARCHY = [
+    "MASTER_ADMIN",
+    "SUPER_ADMIN",
+    "ADEE",
+    "DEPOT_MANAGER",
+    "DRIVER"
+  ];
+
+  const ROLE_LABELS = {
+    "MASTER_ADMIN": "Master Admin",
+    "SUPER_ADMIN": "Super Admin",
+    "ADEE": "ADEE",
+    "DEPOT_MANAGER": "SSE/TRD (Depot Manager)",
+    "DRIVER": "Tower Wagon Driver (TWD)"
+  };
+
+  const loggedInRole = localStorage.getItem("role");
+  const loggedInIndex = ROLE_HIERARCHY.indexOf(loggedInRole);
+
+  const availableRoles = ROLE_HIERARCHY.filter((role, index) => {
+    // Only allow assigning roles strictly below the logged-in user in the hierarchy
+    return loggedInIndex !== -1 && index > loggedInIndex;
+  });
 
   // Fetch user data
   useEffect(() => {
@@ -392,16 +419,15 @@ export default function EditUserModal({ userId, onClose, onSuccess }) {
                         <Building2 size={14} className="inline mr-1" />
                         Depot
                       </label>
-                      <select
+                      <CustomSelect
                         value={formData.depotName}
-                        onChange={(e) => handleChange("depotName", e.target.value)}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition"
-                      >
-                        <option value="">Select Depot</option>
-                        {depots.map(d => (
-                          <option key={d} value={d}>{d}</option>
-                        ))}
-                      </select>
+                        onChange={(v) => handleChange("depotName", v)}
+                        options={[
+                          { value: "", label: "Select Depot" },
+                          ...depots.map(d => ({ value: d, label: d }))
+                        ]}
+                        placeholder="Select Depot"
+                      />
                     </div>
 
                     {/* Role */}
@@ -409,14 +435,15 @@ export default function EditUserModal({ userId, onClose, onSuccess }) {
                       <label className="block text-sm font-medium text-gray-700 mb-1.5">
                         Role
                       </label>
-                      <select
+                      <CustomSelect
                         value={formData.role}
-                        onChange={(e) => handleChange("role", e.target.value)}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition"
-                      >
-                        <option value="DRIVER">Tower Wagon Driver (TWD)</option>
-                        <option value="DEPOT_MANAGER">SSE/TRD (Depot Manager)</option>
-                      </select>
+                        onChange={(v) => handleChange("role", v)}
+                        options={[
+                          { value: "", label: "Select Role" },
+                          ...availableRoles.map(role => ({ value: role, label: ROLE_LABELS[role] }))
+                        ]}
+                        placeholder="Select Role"
+                      />
                     </div>
                   </div>
 
@@ -496,30 +523,30 @@ export default function EditUserModal({ userId, onClose, onSuccess }) {
 
                     {/* Date of Appointment */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                        <Calendar size={14} className="inline mr-1" />
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                         Date of Appointment
                       </label>
-                      <input
-                        type="date"
+                      <CustomDatePicker
                         value={formData.dateOfAppointment}
-                        onChange={(e) => handleChange("dateOfAppointment", e.target.value)}
+                        onChange={(v) => handleChange("dateOfAppointment", v)}
                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition"
+                        placeholderText="DD/MM/YYYY"
                       />
                     </div>
 
                     {/* Date of Entry as TWD */}
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                        <Calendar size={14} className="inline mr-1" />
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                         Date of Entry as TWD
                       </label>
-                      <input
-                        type="date"
-                        value={formData.dateOfEntryAsTWD}
-                        onChange={(e) => handleChange("dateOfEntryAsTWD", e.target.value)}
-                        className="w-full md:w-1/2 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition"
-                      />
+                      <div className="w-full md:w-1/2">
+                        <CustomDatePicker
+                          value={formData.dateOfEntryAsTWD}
+                          onChange={(v) => handleChange("dateOfEntryAsTWD", v)}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition"
+                          placeholderText="DD/MM/YYYY"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -540,20 +567,20 @@ export default function EditUserModal({ userId, onClose, onSuccess }) {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm text-gray-600 mb-1">Done Date</label>
-                          <input
-                            type="date"
+                          <CustomDatePicker
                             value={formData.trainings[type].doneDate}
-                            onChange={(e) => handleTrainingChange(type, "doneDate", e.target.value)}
+                            onChange={(v) => handleTrainingChange(type, "doneDate", v)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition text-sm"
+                            placeholderText="DD/MM/YYYY"
                           />
                         </div>
                         <div>
                           <label className="block text-sm text-gray-600 mb-1">Due Date</label>
-                          <input
-                            type="date"
+                          <CustomDatePicker
                             value={formData.trainings[type].dueDate}
-                            onChange={(e) => handleTrainingChange(type, "dueDate", e.target.value)}
+                            onChange={(v) => handleTrainingChange(type, "dueDate", v)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b659a]/40 focus:border-[#0b659a] transition text-sm"
+                            placeholderText="DD/MM/YYYY"
                           />
                         </div>
                       </div>

@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import ChangePassword from "./pages/ChangePassword";
 
@@ -19,19 +20,38 @@ import AdminUserDetail from "./pages/AdminUserDetail";
 
 import CircularList from "./pages/CircularList";
 
+import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRegister from "./pages/AdminRegister";
 import AdminOverdueRecords from "./pages/AdminOverdueRecords";
 import EnginePage from "./pages/EnginePage";
+import MasterAdminDashboard from "./pages/MasterAdminDashboard";
+function RouteTracker() {
+  const location = useLocation();
+  const idx = window.history.state?.idx ?? 0;
+  
+  useEffect(() => {
+    sessionStorage.setItem("lastIdx", idx.toString());
+    sessionStorage.setItem(`historyPath_${idx}`, location.pathname);
+  }, [location.pathname, idx]);
+
+  return null;
+}
+
 export default function App() {
   return (
-    <Routes>
+    <>
+      <RouteTracker />
+      <Routes>
 
       {/* ================= LOGIN ================= */}
       <Route path="/" element={<Login />} />
 
       {/* ================= CHANGE PASSWORD (First Login) ================= */}
       <Route path="/change-password" element={<ChangePassword />} />
+
+      {/* ================= LAYOUT WRAPPER ================= */}
+      <Route element={<Layout />}>
 
       {/* ================= DRIVER ================= */}
       <Route
@@ -45,7 +65,11 @@ export default function App() {
 
       <Route
   path="/driver/abnormalities"
-  element={<DriverAbnormality />}
+  element={
+    <ProtectedRoute role="DRIVER">
+      <DriverAbnormality />
+    </ProtectedRoute>
+  }
 />
 
       <Route
@@ -158,11 +182,31 @@ export default function App() {
   }
 />
 
+      {/* ================= MASTER ADMIN ================= */}
+      <Route
+        path="/master-admin"
+        element={
+          <ProtectedRoute role="MASTER_ADMIN">
+            <MasterAdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
       {/* ================= SUPER ADMIN ================= */}
       <Route
         path="/admin"
         element={
           <ProtectedRoute role="SUPER_ADMIN">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ================= SCOPED SUPER ADMIN VIEW (MASTER ADMIN) ================= */}
+      <Route
+        path="/master-admin/scope/:scopeUserId"
+        element={
+          <ProtectedRoute role="MASTER_ADMIN">
             <AdminDashboard />
           </ProtectedRoute>
         }
@@ -180,9 +224,9 @@ export default function App() {
       <Route
         path="/admin/circular-status"
         element={
-          // <ProtectedRoute role={["SUPER_ADMIN","DEPOT_MANAGER"]}>
+          <ProtectedRoute role={["SUPER_ADMIN","DEPOT_MANAGER"]}>
             <AdminCircularStatus />
-          // </ProtectedRoute>
+          </ProtectedRoute>
         }
       />
 
@@ -222,6 +266,12 @@ export default function App() {
         }
       />
 
-    </Routes>
+      </Route>{/* end Layout wrapper */}
+
+      {/* ================= CATCH-ALL: redirect unknown routes to login ================= */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+
+      </Routes>
+    </>
   );
 }

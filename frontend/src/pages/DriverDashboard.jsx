@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import api from "../api/axios";
+import { getDistrictAbbreviation } from "../utils/districtMapping";
 import {
   User,
   HeartPulse,
@@ -10,300 +10,28 @@ import {
   AlertTriangle,
   CheckSquare,
   ScrollText,
-  Train,
+  TrainFront,
   ShieldCheck,
-  BellRing
+  BellRing,
+  Wrench
 } from "lucide-react";
 import Swal from "sweetalert2";
-import Footer from "../components/Footer";
+
+import TCardModal from "../components/TCardModal";
 
 export default function DriverDashboard() {
   const navigate = useNavigate();
   const [alerts, setAlerts] = useState([]);
+  const [towerCars, setTowerCars] = useState([]);
 
-  const openTCardPopup = async () => {
-    const checklistTemplate = [
-      "Check Diesel level",
-      "Drain water sediments fuel filter",
-      "Check engine oil level and top up if necessary",
-      "Check fuel, oil, water and exhaust leak",
-      "Check air cleaner oil level",
-      "Check air line leak",
-      "Fill radiator tank with treated water if necessary",
-      "Clean compressor breather",
-      "Drain air receiver tank and close drain cock",
-      "Clean crank case breather",
-      "Start engine and note oil pressure",
-      "Record oil pressure and brake pressure"
-    ];
+  useEffect(() => {
+    api.get("/engine/tower-cars/list").then(res => setTowerCars(res.data || []));
+  }, []);
 
-    const towerCars = ["RU 927/017", "SR 220035", "SR 210018", "SR 960025", "SR 23025", "SR 240063", "RU 06878", "SR 230022", "SR 210067", "RU 01896", "RU 176019", "SR 230059", "RU 9516", "RU 9514", "RU 9496", "RU 950021", "LR", "TRAINING"];
+  const [showTCardModal, setShowTCardModal] = useState(false);
 
-    const items = checklistTemplate.map(d => ({
-      description: d,
-      checked: false,
-      remarks: "",
-      priority: "",
-      dieselLevel: null
-    }));
-
-    const { value } = await Swal.fire({
-      title: "Daily Tower Car Checklist",
-      width: window.innerWidth < 640 ? "95%" : 900,
-      showCancelButton: true,
-      confirmButtonText: "Submit Checklist",
-      html: `
-<div style="text-align:left;">
-
-  <div style="
-    background:#F8FAFC;
-    border:1px solid #E2E8F0;
-    border-radius:14px;
-    padding:18px;
-    margin-bottom:18px;
-  ">
-
-    <label style="
-      display:block;
-      font-size:14px;
-      font-weight:700;
-      color:#334155;
-      margin-bottom:8px;
-    ">
-      Tower Car
-    </label>
-
-    <select
-      id="tcar"
-      class="swal2-input"
-      style="
-        width:100%;
-        margin:0;
-        border-radius:10px;
-        border:1px solid #CBD5E1;
-        background:white;
-      "
-    >
-      <option value="">Select Tower Car</option>
-      ${towerCars
-        .map(
-          t => `<option value="${t}">${t}</option>`
-        )
-        .join("")}
-    </select>
-
-  </div>
-
-  <div style="
-      max-height:420px;
-      overflow-y:auto;
-      padding-right:6px;
-  ">
-
-    ${items
-      .map(
-        (i, idx) => `
-
-      <div style="
-        border:1px solid #E2E8F0;
-        border-radius:14px;
-        background:#FFFFFF;
-        padding:16px;
-        margin-bottom:14px;
-        box-shadow:0 1px 3px rgba(0,0,0,.05);
-      ">
-
-        <label style="
-          display:flex;
-          align-items:flex-start;
-          gap:10px;
-          cursor:pointer;
-        ">
-
-          <input
-            type="checkbox"
-            id="chk${idx}"
-            style="
-              margin-top:4px;
-              width:18px;
-              height:18px;
-            "
-          />
-
-          <span style="
-            font-size:14px;
-            font-weight:600;
-            color:#1E293B;
-            line-height:1.5;
-          ">
-            ${i.description}
-          </span>
-
-        </label>
-
-        ${
-          i.description === "Check Diesel level"
-            ? `
-        <div style="margin-top:12px;">
-
-          <input
-            type="number"
-            id="diesel${idx}"
-            class="swal2-input"
-            placeholder="Enter Diesel Level (Litres)"
-            min="0"
-            style="
-              width:100%;
-              margin:0;
-              border-radius:10px;
-    font-size:13px;
-              border:1px solid #CBD5E1;
-            "
-          />
-
-        </div>
-        `
-            : ""
-        }
-
-        <div style="margin-top:12px;">
-
-          <input
-  id="rem${idx}"
-  class="swal2-input"
-  placeholder="Remarks (optional)"
-  style="
-    width:100%;
-    margin:0;
-    border-radius:10px;
-    border:1px solid #CBD5E1;
-    font-size:13px;
-  "
-
-  oninput="
-    const val=this.value.trim();
-    const priorityDiv=document.getElementById('priorityDiv${idx}');
-
-    if(val){
-      priorityDiv.style.display='block';
-    }else{
-      priorityDiv.style.display='none';
-    }
-  "
-/>
-
-        </div>
-
-        <div
-          id="priorityDiv${idx}"
-          style="
-            display:none;
-            margin-top:12px;
-          "
-        >
-
-          <label style="
-            display:block;
-            margin-bottom:6px;
-            font-size:13px;
-            font-weight:600;
-            color:#475569;
-          ">
-            Priority
-          </label>
-
-          <select
-            id="priority${idx}"
-            class="swal2-input"
-            style="
-              width:100%;
-              margin:0;
-              border-radius:10px;
-              border:1px solid #CBD5E1;
-            "
-          >
-            <option value="">Select Priority</option>
-            <option value="HIGH">
-              🔴 High Priority
-            </option>
-            <option value="LOW">
-              🟡 Less Priority
-            </option>
-          </select>
-
-        </div>
-
-      </div>
-
-    `
-      )
-      .join("")}
-
-  </div>
-
-</div>
-`,
-      preConfirm: () => {
-        const tCarNo = document.getElementById("tcar").value;
-        if (!tCarNo) {
-          Swal.showValidationMessage("T Car No is required");
-          return;
-        }
-
-        const collected = items.map((i, idx) => {
-          const remarks = document.getElementById(`rem${idx}`).value.trim();
-          const priority = document.getElementById(`priority${idx}`)?.value || "";
-          const dieselInput = document.getElementById(`diesel${idx}`);
-
-          let dieselLevel = null;
-
-          if (dieselInput) {
-            dieselLevel = dieselInput.value ? Number(dieselInput.value) : null;
-            if (dieselLevel === null) {
-              Swal.showValidationMessage("Diesel Level is required");
-              return false;
-            }
-          }
-
-          if (remarks && !priority) {
-            Swal.showValidationMessage("Select priority for all remarks");
-            return false;
-          }
-
-          return {
-            description: i.description,
-            checked: document.getElementById(`chk${idx}`).checked,
-            remarks,
-            priority: remarks ? priority : null,
-            dieselLevel
-          };
-        });
-
-        if (collected.includes(false)) return;
-
-        return { tCarNo, items: collected };
-      }
-    });
-
-    if (!value) return;
-
-    try {
-      await api.post("/driver/tcard", value);
-
-      await Swal.fire({
-        icon: "success",
-        title: "Checklist Saved",
-        text: "Daily T-Card checklist submitted successfully",
-        timer: 1500,
-        showConfirmButton: false
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Submission Failed",
-        text: err.response?.data?.msg || "Unable to save checklist."
-      });
-    }
+  const openTCardPopup = () => {
+    setShowTCardModal(true);
   };
 
   useEffect(() => {
@@ -343,18 +71,20 @@ export default function DriverDashboard() {
     { title: "Duty Logs", description: "Access duty and mileage records", icon: <ClipboardList size={20} />, onClick: () => navigate("/driver/daily") },
     { title: "Daily Tower Car Checklist", description: "Submit the daily operating checklist", icon: <CheckSquare size={20} />, onClick: openTCardPopup },
     { title: "Circulars", description: "Open official circulars and notices", icon: <ScrollText size={20} />, onClick: () => navigate("/circulars") },
-    { title: "TW Dashboard", description: "View tower wagon operational status", icon: <Train size={20} />, onClick: () => navigate("/driver/engine") },
-    { title: "Abnormalities", description: "Report and track operational issues", icon: <AlertTriangle size={20} />, onClick: () => navigate("/driver/abnormalities") }
+    { title: "TW Dashboard", description: "View tower wagon operational status", icon: <TrainFront size={20} />, onClick: () => navigate("/driver/engine") },
+    { title: "Abnormalities", description: "Report and track operational issues", icon: <Wrench size={20} />, onClick: () => navigate("/driver/abnormalities") }
   ];
 
   return (
     <>
-      <Navbar />
       <div className="rail-page">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex flex-col gap-2">
             <div>
-              <h2 className="rail-page-title">Driver Dashboard</h2>
+              <p className="text-lg font-medium text-slate-600 mb-1">Hi, {localStorage.getItem("userName") || "User"}!</p>
+              <h2 className="rail-page-title">
+                {`Driver/TRD/${localStorage.getItem("depotName")} Dashboard`}
+              </h2>
               <p className="rail-page-subtitle">Compliance, duty records and operational access</p>
             </div>
           </div>
@@ -372,7 +102,8 @@ export default function DriverDashboard() {
           </div>
         </div>
       </div>
-      <Footer />
+      
+      <TCardModal isOpen={showTCardModal} onClose={() => setShowTCardModal(false)} towerCars={towerCars} />
     </>
   );
 }
@@ -402,13 +133,13 @@ function Card({ title, description, icon, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group flex flex-col items-center justify-center gap-2 rounded-2xl border border-[#D6DEE8] bg-white p-4 text-center transition duration-200 hover:border-[#2563EB] hover:shadow-lg md:gap-3 md:p-5"
+      className="group flex flex-col items-center justify-center gap-2 rounded-2xl bg-white shadow-sm hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1.5 p-4 text-center transition-all duration-300 md:gap-3 md:p-5 focus:outline-none"
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8F1F8] text-[#0B3C5D] transition group-hover:bg-[#0B3C5D] group-hover:text-white md:h-14 md:w-14">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8F1F8] text-[#0B3C5D] transition-colors duration-300 group-hover:bg-[#0B3C5D] group-hover:text-white md:h-14 md:w-14">
         {icon}
       </div>
-      <h3 className="text-xs font-semibold text-[#1F2937] md:text-sm">{title}</h3>
-      <p className="hidden text-xs text-[#64748B] md:block md:text-sm">{description}</p>
+      <h3 className="text-xs font-semibold text-[#1F2937] transition-colors duration-300 md:text-sm">{title}</h3>
+      <p className="hidden text-xs text-[#64748B] transition-colors duration-300 md:block md:text-sm">{description}</p>
     </button>
   );
 }

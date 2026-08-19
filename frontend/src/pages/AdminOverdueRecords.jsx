@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import Swal from "sweetalert2";
+import CustomSelect from "../components/CustomSelect";
 
 import {
   AlertTriangle,
@@ -58,7 +57,7 @@ const filtered = useMemo(() => {
       depot === "" || record.depotName === depot;
 
     const categoryMatch =
-      category === "" || record.category === category;
+      category === "" || category === "All" || record.category === category;
 
     return searchMatch && depotMatch && categoryMatch;
   });
@@ -77,7 +76,6 @@ const filtered = useMemo(() => {
 
   return (
     <>
-      <Navbar />
 
       <div className="min-h-screen bg-slate-100 px-4 py-6">
         <div className="max-w-7xl mx-auto space-y-6">
@@ -147,37 +145,28 @@ rounded-lg"
               />
             </div>
 
-            <select
+            <CustomSelect
               value={depot}
-              onChange={(e) => setDepot(e.target.value)}
-              className="border
-rounded-lg
-px-3
-py-2"
-            >
-              <option value="">All Depots</option>
+              onChange={setDepot}
+              options={[
+                { value: "", label: "All Depots" },
+                ...depots.map(d => ({ value: d, label: d }))
+              ]}
+              placeholder="All Depots"
+              className="w-full sm:w-auto min-w-[150px]"
+            />
 
-              {depots.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-
-            <select
+            <CustomSelect
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="border
-rounded-lg
-px-3
-py-2"
-            >
-              <option value="">All Categories</option>
-
-              <option value="Training Overdue">Training Overdue</option>
-
-              <option value="LR Overdue">LR Overdue</option>
-            </select>
+              onChange={setCategory}
+              options={[
+                { value: "All", label: "All Categories" },
+                { value: "Training Overdue", label: "Training Overdue" },
+                { value: "LR Overdue", label: "LR Overdue" }
+              ]}
+              placeholder="All Categories"
+              className="w-full sm:w-auto min-w-[150px]"
+            />
           </div>
 
           <div
@@ -245,7 +234,7 @@ font-medium
 ${
   record.category === "Training Overdue"
     ? "bg-red-100 text-red-700"
-    : "bg-indigo-100 text-indigo-700"
+    : "bg-[#0b659a]/10 text-[#0b659a]"
 }
 
 `}
@@ -274,12 +263,12 @@ ${
                           className="inline-flex
 items-center
 gap-1
-bg-indigo-600
+bg-[#0b659a]
 text-white
 px-3
 py-1.5
 rounded-lg
-hover:bg-indigo-700"
+hover:bg-[#09527d]"
                         >
                           <Eye size={14} />
                           View
@@ -293,7 +282,7 @@ hover:bg-indigo-700"
         </div>
       </div>
 
-      <Footer />
+      
     </>
   );
 }

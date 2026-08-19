@@ -1,0 +1,187 @@
+[
+  {
+    "_id": "6a584bad314b88e1f3ec068d",
+    "driverId": "6a4f3b4821abd2652e4c6dac",
+    "depotName": "ED",
+    "towerCarNo": "SR 240063",
+    "abnormalities": [
+      {
+        "type": "Track Side Abnormality",
+        "remarks": "Testing"
+      },
+      {
+        "type": "Visibility of Signal",
+        "remarks": "Testing"
+      },
+      {
+        "type": "Foreign Material on Track",
+        "remarks": "Testing"
+      },
+      {
+        "type": "Trespassing Human",
+        "remarks": "Testing"
+      },
+      {
+        "type": "Trespassing Cattle",
+        "remarks": "Testing"
+      },
+      {
+        "type": "Others",
+        "remarks": "Testing"
+      }
+    ],
+    "status": "Pending",
+    "actionTaken": "",
+    "createdAt": "2026-07-16T03:10:37.149Z",
+    "updatedAt": "2026-07-16T03:10:37.149Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a688ec7e2a6fb5360bf9c4d",
+    "driverId": "6a4f3b4821abd2652e4c6dac",
+    "depotName": "ED",
+    "towerCarNo": "SR 220035",
+    "abnormalities": [
+      {
+        "type": "Track Side Abnormality",
+        "remarks": ""
+      },
+      {
+        "type": "Visibility of Signal",
+        "remarks": ""
+      },
+      {
+        "type": "Foreign Material on Track",
+        "remarks": ""
+      },
+      {
+        "type": "Trespassing Human",
+        "remarks": ""
+      },
+      {
+        "type": "Trespassing Cattle",
+        "remarks": ""
+      },
+      {
+        "type": "Others",
+        "remarks": ""
+      }
+    ],
+    "status": "Pending",
+    "actionTaken": "",
+    "createdAt": "2026-07-28T11:13:11.217Z",
+    "updatedAt": "2026-07-28T11:13:11.217Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a78114d761259375e068fde",
+    "driverId": "6a74383b12576af3aa5a26d8",
+    "depotName": "ULL",
+    "towerCarNo": "SR 230066",
+    "abnormalities": [
+      {
+        "type": "Track Side Abnormality",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Visibility of Signal",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Foreign Material on Track",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Trespassing Human",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Trespassing Cattle",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Others",
+        "remarks": "TESTING"
+      }
+    ],
+    "status": "Pending",
+    "actionTaken": "",
+    "createdAt": "2026-08-09T05:34:05.890Z",
+    "updatedAt": "2026-08-09T05:34:05.890Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a7811a7761259375e06903c",
+    "driverId": "6a74303212576af3aa5a24f7",
+    "depotName": "NMKL",
+    "towerCarNo": "SR 220035",
+    "abnormalities": [
+      {
+        "type": "Track Side Abnormality",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Visibility of Signal",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Foreign Material on Track",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Trespassing Human",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Trespassing Cattle",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Others",
+        "remarks": "TESTING"
+      }
+    ],
+    "status": "Pending",
+    "actionTaken": "",
+    "createdAt": "2026-08-09T05:35:35.341Z",
+    "updatedAt": "2026-08-09T05:35:35.341Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a781292761259375e069146",
+    "driverId": "6a78124e761259375e069107",
+    "depotName": "PTJ",
+    "towerCarNo": "RU 176019",
+    "abnormalities": [
+      {
+        "type": "Track Side Abnormality",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Visibility of Signal",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Foreign Material on Track",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Trespassing Human",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Trespassing Cattle",
+        "remarks": "TESTING"
+      },
+      {
+        "type": "Others",
+        "remarks": "TESTING"
+      }
+    ],
+    "status": "Pending",
+    "actionTaken": "",
+    "createdAt": "2026-08-09T05:39:30.695Z",
+    "updatedAt": "2026-08-09T05:39:30.695Z",
+    "__v": 0
+  }
+]

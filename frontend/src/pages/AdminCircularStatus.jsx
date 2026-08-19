@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import Navbar from "../components/Navbar";
+import CustomDatePicker from "../components/CustomDatePicker";
 import Swal from "sweetalert2";
 import {
   FileText,
@@ -11,13 +11,13 @@ import {
   UserCog,
   Filter,
   RefreshCw,
-  AlertTriangle, 
+  AlertTriangle,
   Building2,
   Loader2,
   CalendarDays
 } from "lucide-react";
-import Footer from "../components/Footer";
 import BackButton from "../components/BackButton";
+import CustomSelect from "../components/CustomSelect";
 
 export default function AdminCircularStatus() {
   const [circulars, setCirculars] = useState([]);
@@ -29,6 +29,7 @@ export default function AdminCircularStatus() {
   const [filterRole, setFilterRole] = useState("");
   const [filterStatus, setFilterStatus] = useState("pending");
   const [filterDepot, setFilterDepot] = useState("");
+  const userRole = localStorage.getItem("role");
 
   // ✅ LOAD CIRCULARS (with optional date filter)
   const loadCirculars = async (date = "") => {
@@ -113,14 +114,13 @@ export default function AdminCircularStatus() {
 
   return (
     <>
-      <Navbar />
 
       <div className="min-h-screen bg-[#F8FAFC] px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-7xl mx-auto space-y-8">
-          <BackButton/>
+          <BackButton />
 
           {/* ================= HEADER ================= */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm">
             {/* LEFT */}
             <div className="flex items-center gap-4">
               <div className="flex items-start gap-4">
@@ -128,9 +128,9 @@ export default function AdminCircularStatus() {
                   <FileText size={28} />
                 </div>
                 <div>
-                 <h2 className="text-l lg:text-3xl font-bold text-slate-800 tracking-tight break-words">
-  Circular Acknowledgements
-</h2>
+                  <h2 className="text-l lg:text-3xl font-bold text-slate-800 tracking-tight break-words">
+                    Circular Acknowledgements
+                  </h2>
                   <p className="text-sm text-slate-500 mt-1 font-medium">
                     Monitor who has read and acknowledged circulars
                   </p>
@@ -151,7 +151,7 @@ export default function AdminCircularStatus() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* DATE FILTER */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
+            <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-center">
               <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
                 <div className="p-1.5 bg-slate-100 rounded-lg text-[#0b659a]">
                   <CalendarDays size={16} />
@@ -160,17 +160,17 @@ export default function AdminCircularStatus() {
               </label>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <input
-                  type="date"
+                <CustomDatePicker
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none transition-all"
+                  onChange={(v) => setSelectedDate(v)}
+                  placeholderText="DD/MM/YYYY"
+                  className="w-full sm:w-[160px] px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:ring-2 focus:ring-[#0b659a] focus:border-[#0b659a] focus:outline-none transition-all cursor-pointer"
                 />
 
                 {selectedDate && (
                   <button
                     onClick={() => setSelectedDate("")}
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+                    className="text-sm font-medium text-[#0b659a] hover:text-[#09527d] transition-colors"
                   >
                     Clear Filter
                   </button>
@@ -179,7 +179,7 @@ export default function AdminCircularStatus() {
             </div>
 
             {/* CIRCULAR SELECTOR */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
+            <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-center">
               <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
                 <div className="p-1.5 bg-slate-100 rounded-lg text-[#0b659a]">
                   <FileText size={16} />
@@ -189,7 +189,7 @@ export default function AdminCircularStatus() {
 
               {loadingCirculars ? (
                 <div className="flex items-center gap-2 text-slate-500 py-2">
-                  <Loader2 size={18} className="animate-spin text-indigo-600" />
+                  <Loader2 size={18} className="animate-spin text-[#0b659a]" />
                   <span className="font-medium">Loading circulars...</span>
                 </div>
               ) : circulars.length === 0 ? (
@@ -198,17 +198,15 @@ export default function AdminCircularStatus() {
                   No circulars found for selected date.
                 </div>
               ) : (
-                <select
+                <CustomSelect
                   value={selectedCircular}
-                  onChange={(e) => setSelectedCircular(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none transition-all cursor-pointer"
-                >
-                  {circulars.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.title} ({new Date(c.circularDate).toLocaleDateString()})
-                    </option>
-                  ))}
-                </select>
+                  onChange={(v) => setSelectedCircular(v)}
+                  options={circulars.map((c) => ({
+                    value: c._id,
+                    label: `${c.title} (${new Date(c.circularDate).toLocaleDateString()})`
+                  }))}
+                  placeholder="Select Circular"
+                />
               )}
             </div>
           </div>
@@ -221,39 +219,44 @@ export default function AdminCircularStatus() {
               <SummaryCard icon={<FileText />} label="Completion" value={`${report.summary.percentComplete}%`} color="indigo" />
             </div>
           )}
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <div className="flex items-center gap-3 text-slate-700 font-bold mr-2">
-              <div className="p-2 bg-slate-100 rounded-lg text-[#0b659a]">
-                <Filter size={20} />
+          {userRole !== "DEPOT_MANAGER" && (
+            <div className="bg-white p-5 rounded-2xl shadow-sm flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <div className="flex items-center gap-3 text-slate-700 font-bold mr-2">
+                <div className="p-2 bg-slate-100 rounded-lg text-[#0b659a]">
+                  <Filter size={20} />
+                </div>
+                <span className="text-base">Filters</span>
               </div>
-              <span className="text-base">Filters</span>
+
+
+              {/* Wrapper to push filters to the right */}
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto sm:ml-auto">
+                  {/* Role Filter */}
+                  <CustomSelect
+                    value={filterRole}
+                    onChange={setFilterRole}
+                    options={[
+                      { value: "", label: "All Roles" },
+                      { value: "DRIVER", label: "Driver" },
+                      { value: "DEPOT_MANAGER", label: "SSE/TRD" },
+                      ...(userRole !== "ADEE" ? [{ value: "ADEE", label: "ADEE" }] : []),
+                    ]}
+                    placeholder="All Roles"
+                  />
+
+                  {/* Depot Filter */}
+                  <CustomSelect
+                    value={filterDepot}
+                    onChange={setFilterDepot}
+                    options={[
+                      { value: "", label: "All Depots" },
+                      ...uniqueDepots.map(d => ({ value: d, label: d }))
+                    ]}
+                    placeholder="All Depots"
+                  />
+                </div>
             </div>
-
-
-            {/* Role */}
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none transition-all cursor-pointer"
-            >
-              <option value="">All Roles</option>
-              <option value="DRIVER">Driver</option>
-              <option value="DEPOT_MANAGER">SSE/TRD</option>
-              <option value="ADEE">ADEE</option>
-            </select>
-
-            {/* Depot */}
-            <select
-              value={filterDepot}
-              onChange={(e) => setFilterDepot(e.target.value)}
-              className="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none transition-all cursor-pointer"
-            >
-              <option value="">All Depots</option>
-              {uniqueDepots.map(depot => (
-                <option key={depot} value={depot}>{depot}</option>
-              ))}
-            </select>
-          </div>
+          )}
 
           {/* USERS TABLE (unchanged below this) */}
           {/* ⬇ Your existing table code remains exactly same ⬇ */}
@@ -262,7 +265,7 @@ export default function AdminCircularStatus() {
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
             {loading ? (
               <div className="py-16 flex flex-col items-center justify-center text-slate-500">
-                <Loader2 size={36} className="animate-spin mb-4 text-indigo-600" />
+                <Loader2 size={36} className="animate-spin mb-4 text-[#0b659a]" />
                 <p className="font-medium text-lg">Loading acknowledgement data...</p>
               </div>
             ) : !report || filteredUsers.length === 0 ? (
@@ -289,7 +292,7 @@ export default function AdminCircularStatus() {
                       <tr key={user._id} className="hover:bg-slate-50 transition-colors group border-b border-slate-50 last:border-0">
                         <td className="px-6 py-4">
                           {user.acknowledged ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-emerald-100 rounded-lg">
                               <CheckCircle size={14} />
                               Acknowledged
                             </span>
@@ -304,7 +307,7 @@ export default function AdminCircularStatus() {
                         <td className="px-6 py-4 text-slate-600">{user.pfNo}</td>
                         <td className="px-6 py-4 text-slate-600">{user.role}</td>
                         <td className="px-6 py-4">
-                          <span className="px-3 py-1 text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-lg">
+                          <span className="px-3 py-1 text-xs font-semibold bg-[#0b659a]/10 text-[#09527d] border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#0b659a]/10 rounded-lg">
                             {user.depotName || "-"}
                           </span>
                         </td>
@@ -319,7 +322,7 @@ export default function AdminCircularStatus() {
         </div>
       </div>
 
-      <Footer />
+
     </>
   );
 }
@@ -351,24 +354,24 @@ function SummaryCard({ icon, label, value, color }) {
     const step = (timestamp) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      
+
       const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      
+
       const currentNum = Math.floor(easeProgress * targetValue);
       setDisplayValue(isPercent ? `${currentNum}%` : currentNum);
-      
+
       if (progress < 1) {
         window.requestAnimationFrame(step);
       } else {
         setDisplayValue(isPercent ? `${targetValue}%` : targetValue);
       }
     };
-    
+
     window.requestAnimationFrame(step);
   }, [value]);
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-250 flex items-center gap-5">
+    <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-250 flex items-center gap-5">
       <div className={`p-4 rounded-2xl flex-shrink-0 ${colorClasses[color]}`}>
         {icon}
       </div>

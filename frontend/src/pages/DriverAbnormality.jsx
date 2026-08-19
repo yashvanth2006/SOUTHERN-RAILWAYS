@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Swal from "sweetalert2";
-import Navbar from "../components/Navbar";
+import CustomSelect from "../components/CustomSelect";
 import BackButton from "../components/BackButton";
-import Footer from "../components/Footer";
-
 import { AlertTriangle, Send } from "lucide-react";
 
-const towerCars = ["RU 927/017", "SR 220035", "SR 210018", "SR 960025", "SR 23025", "SR 240063", "RU 06878", "SR 230022", "SR 210067", "RU 01896", "RU 176019", "SR 230059", "RU 9516", "RU 9514", "RU 9496", "RU 950021", "LR", "TRAINING"];
+
 
 const abnormalityTypes = ["Track Side Abnormality", "Visibility of Signal", "Foreign Material on Track", "Trespassing Human", "Trespassing Cattle", "Others"];
 
 export default function DriverAbnormality() {
+  const [towerCars, setTowerCars] = useState([]);
   const [towerCarNo, setTowerCarNo] = useState("");
   const [history, setHistory] = useState([]);
   const [remarks, setRemarks] = useState({
@@ -26,13 +25,14 @@ export default function DriverAbnormality() {
   const loadHistory = async () => {
     try {
       const res = await api.get("/abnormalities/my");
-      setHistory(res.data);
+      setHistory(res.data || []);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
+    api.get("/engine/tower-cars/list").then(res => setTowerCars(res.data || []));
     loadHistory();
   }, []);
 
@@ -67,7 +67,6 @@ export default function DriverAbnormality() {
 
   return (
     <>
-      <Navbar />
       <div className="rail-page">
         <div className="mx-auto max-w-6xl space-y-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -83,7 +82,7 @@ export default function DriverAbnormality() {
           </div>
 
           <div className="rail-panel p-4 sm:p-6 md:p-8">
-            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E8EEF5] text-[#C8102E]">
                 <AlertTriangle size={20} />
               </div>
@@ -96,14 +95,19 @@ export default function DriverAbnormality() {
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#1F2937]">Tower Car Number</label>
-                <select value={towerCarNo} onChange={e => setTowerCarNo(e.target.value)} className="rail-input">
-                  <option value="">Select Tower Car</option>
-                  {towerCars.map(car => <option key={car} value={car}>{car}</option>)}
-                </select>
+                <CustomSelect 
+                    value={towerCarNo} 
+                    onChange={setTowerCarNo} 
+                    options={[
+                      { value: "", label: "Select Tower Car" },
+                      ...towerCars.map(car => ({ value: car, label: car }))
+                    ]}
+                    placeholder="Select Tower Car"
+                  />
               </div>
 
               {abnormalityTypes.map(type => (
-                <div key={type} className="rounded-2xl border border-[#D1D5DB] bg-[#F9FBFC] p-4">
+                <div key={type} className="rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none-[#D1D5DB] bg-[#F9FBFC] p-4">
                   <h3 className="font-semibold text-[#C8102E]">{type}</h3>
                   <textarea rows={3} value={remarks[type]} onChange={e => setRemarks({ ...remarks, [type]: e.target.value })} placeholder="Enter remarks" className="rail-input mt-3 min-h-[96px]" />
                 </div>
@@ -147,7 +151,7 @@ export default function DriverAbnormality() {
           </div>
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 }

@@ -327,7 +327,7 @@ export default function UserDetailModal({ userId, onClose, isAdmin = false }) {
                   {lrList.length === 0 ? (
                     <EmptyState message="No LR records available" />
                   ) : (
-                    <div className="overflow-x-auto rounded-xl border">
+                    <div className="overflow-x-auto rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none">
                       <table className="w-full text-sm">
                         <thead className="bg-slate-50">
                           <tr>
@@ -371,7 +371,7 @@ export default function UserDetailModal({ userId, onClose, isAdmin = false }) {
                   {logs.length === 0 ? (
                     <EmptyState message="No duty logs available" />
                   ) : (
-                    <div className="overflow-x-auto rounded-xl border">
+                    <div className="overflow-x-auto rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none">
                       <table className="w-full text-sm">
                         <thead className="bg-slate-50">
                           <tr>
@@ -412,7 +412,7 @@ export default function UserDetailModal({ userId, onClose, isAdmin = false }) {
                   ) : (
                     <div className="space-y-4">
                       {tcards.slice(0, 10).map((card) => (
-                        <div key={card._id} className="border rounded-xl p-4 bg-slate-50">
+                        <div key={card._id} className="border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-xl p-4 bg-slate-50">
                           <div className="flex justify-between items-center mb-3">
                             <span className="font-semibold text-gray-800">
                               {new Date(card.date).toLocaleDateString()}
@@ -481,7 +481,7 @@ function InfoCard({ icon, label, value }) {
 
 function StatCard({ label, value }) {
   return (
-    <div className="bg-[#0b659a]/10 rounded-xl p-4 text-center border border-[#0b659a]/20">
+    <div className="bg-[#0b659a]/10 rounded-xl p-4 text-center border border-slate-200">
       <p className="text-2xl font-bold text-[#0b659a]">{value}</p>
       <p className="text-xs text-[#0b659a] font-medium">{label}</p>
     </div>

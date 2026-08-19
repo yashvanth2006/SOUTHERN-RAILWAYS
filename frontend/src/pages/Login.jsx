@@ -1,16 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Swal from "sweetalert2";
-import { Train, Lock, User } from "lucide-react";
+import { Train, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useCircularGuard } from "../context/CircularGuard";
 
 export default function Login() {
   const [pfNo, setPfNo] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { refreshCircularStatus } = useCircularGuard();
+
+  // If the user arrives at the login page (e.g., via the Back button),
+  // immediately clear their session. This prevents them from clicking
+  // the Forward button to get back into the dashboard.
+  useEffect(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  }, []);
+
+  const handleKeyUp = (e) => {
+    if (e.key === "Enter") {
+      login();
+    }
+  };
 
   const login = async () => {
     if (!pfNo || !password) {
@@ -29,13 +44,32 @@ export default function Login() {
       const res = await api.post("/auth/login", { pfNo, password });
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userName", res.data.name);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("passwordChanged", res.data.passwordChanged ? "true" : "false");
+      localStorage.setItem("permissions", JSON.stringify(res.data.permissions || []));
+      localStorage.setItem("scope", JSON.stringify(res.data.scope || {}));
+      
+      localStorage.setItem("districtName", res.data.districtName || "");
       localStorage.setItem("depotName", res.data.depotName || "");
       localStorage.setItem(
-  "assignedDepots",
-  JSON.stringify(res.data.assignedDepots || [])
-);
+        "assignedDepots",
+        JSON.stringify(res.data.assignedDepots || [])
+      );
+
+      // Restore circular acknowledgement state from backend
+      if (res.data.lastAcknowledgedCircularId) {
+        localStorage.setItem("lastSeenCircularId", res.data.lastAcknowledgedCircularId);
+        // Also ensure acknowledgedCirculars has it so the list view shows the checkmark
+        const existingAcks = JSON.parse(localStorage.getItem("acknowledgedCirculars") || "[]");
+        if (!existingAcks.includes(res.data.lastAcknowledgedCircularId)) {
+          existingAcks.push(res.data.lastAcknowledgedCircularId);
+          localStorage.setItem("acknowledgedCirculars", JSON.stringify(existingAcks));
+        }
+      }
+
+      // Clear skip flag so it shows up on new login
+      sessionStorage.removeItem("circularSkipped");
 
       // Check if first login (password not changed)
       if (!res.data.passwordChanged) {
@@ -63,9 +97,10 @@ export default function Login() {
       if (res.data.role === "DRIVER") navigate("/driver");
       if (res.data.role === "DEPOT_MANAGER") navigate("/manager");
       if (res.data.role === "SUPER_ADMIN") navigate("/admin");
+      if (res.data.role === "MASTER_ADMIN") navigate("/master-admin");
       if (res.data.role === "ADEE") {
-  navigate("/adee");
-}
+        navigate("/adee");
+      }
     } catch (err) {
        console.error("LOGIN ERROR:", err);
       Swal.fire({
@@ -91,15 +126,19 @@ export default function Login() {
         {/* HEADER */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="p-3 rounded-full bg-blue-100">
-              <Train className="text-blue-700" size={28} />
+            <div className="p-3 rounded-full bg-white-100">
+              <img 
+                src="/app-logo.png" 
+                alt="Tower Wagon Train Logo" 
+                className="h-16 sm:h-16 w-auto object-contain" 
+              />
             </div>
           </div>
           <h1 className="text-2xl font-bold text-gray-800">
-            Tower Wagon Driver Management system
+            Tower wagon & Driver Management system
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
-             TRD/SA Division
+          <p className="text-sm text-black-500 mt-1">
+             TRD/SR
           </p>
         </div>
 
@@ -118,7 +157,8 @@ export default function Login() {
                 placeholder="Enter PF Number"
                 value={pfNo}
                 onChange={(e) => setPfNo(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                onKeyUp={handleKeyUp}
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
               />
             </div>
           </div>
@@ -131,12 +171,21 @@ export default function Login() {
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                onKeyUp={handleKeyUp}
+                className="w-full pl-10 pr-10 py-2.5 border border-slate-200 focus:ring-2 focus:ring-[#0b659a] focus:border-transparent focus:outline-none rounded-lg text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(v => !v)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 focus:outline-none"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -153,12 +202,6 @@ export default function Login() {
           >
             {loading ? "Signing In..." : "Login Securely"}
           </button>
-        </div>
-
-        {/* FOOTER */}
-        <div className="text-center mt-8 text-xs text-gray-400">
-          © {new Date().getFullYear()} Indian Railways <br />
-          Authorized Personnel Only
         </div>
       </div>
     </div>

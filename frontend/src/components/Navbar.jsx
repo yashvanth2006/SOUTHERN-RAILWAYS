@@ -6,138 +6,51 @@ import {
   Menu,
   X,
   LogOut,
-  Train,
-  User,
   ClipboardList,
   Shield,
-  Users,
-  FileText,
-  CheckSquare,
-  AlertTriangle
+  AlertTriangle,
+  Crown,
+  ShieldUser,
+  TrainFront,
+  FileUp,
+  ClipboardCheck,
+  Files
 } from "lucide-react";
 
-import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
-import "@react-pdf-viewer/core/lib/styles/index.css";
 
-const PDFJS_WORKER_URL =
-  "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+const ALL_NAV_PATHS = [
+  "/driver/abnormalities",
+  "/driver/daily",
+  "/driver/engine",
+  "/driver",
+  "/manager/engine",
+  "/manager",
+  "/admin/circular-upload",
+  "/admin/circular-status",
+  "/admin/report-download",
+  "/admin/engine",
+  "/admin",
+  "/adee/engine",
+  "/adee",
+  "/master-admin",
+  "/circulars"
+];
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const WAIT_TIME = 60;
-
-const [secondsLeft, setSecondsLeft] = useState(WAIT_TIME);
   const location = useLocation();
   const [open, setOpen] = useState(false);
-
   const role = localStorage.getItem("role");
 
-  const [viewCircular, setViewCircular] = useState(null);
-  const [ackLoading, setAckLoading] = useState(false);
-  useEffect(() => {
-  if (!viewCircular) return;
-
-  setSecondsLeft(WAIT_TIME);
-
-  const timer = setInterval(() => {
-    setSecondsLeft(prev => {
-      if (prev <= 1) {
-        clearInterval(timer);
-        return 0;
-      }
-      return prev - 1;
-    });
-  }, 1000);
-
-  return () => clearInterval(timer);
-}, [viewCircular]);
+  // Determine the most specific matching route for the current location
+  const activePath = ALL_NAV_PATHS
+    .filter(path => location.pathname === path || location.pathname.startsWith(`${path}/`))
+    .sort((a, b) => b.length - a.length)[0];
 
   useEffect(() => {
-    if (role === "SUPER_ADMIN") return;
-
-    const checkNewCircular = async () => {
-      try {
-        const res = await api.get("/admin/circulars");
-        if (!res.data.length) return;
-
-        const latest = res.data[0];
-        const lastSeen = localStorage.getItem("lastSeenCircularId");
-        if (lastSeen === latest._id) return;
-
-        const result = await Swal.fire({
-          icon: "info",
-          title: "New Circular Published",
-          html: `
-            <p class="mb-2"><strong>${latest.title}</strong></p>
-            <p>Please view and acknowledge the circular.</p>
-          `,
-          showCancelButton: true,
-          showDenyButton: true,
-          confirmButtonText: "View",
-          denyButtonText: "Download",
-          cancelButtonText: "Later",
-          confirmButtonColor: "#4f46e5",
-          denyButtonColor: "#059669",
-          cancelButtonColor: "#6b7280"
-        });
-
-        if (result.isConfirmed) {
-  setViewCircular(latest);
-}
-        else if (result.isDenied) {
-          const link = document.createElement("a");
-          link.href = latest.pdfUrl;
-          link.download = latest.originalFilename || "circular.pdf";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      } catch (err) {
-        console.error("Circular check failed", err);
-      }
-    };
-
-    checkNewCircular();
-  }, [role]);
-
-  const acknowledgeCircular = async () => {
-  try {
-    if (!viewCircular?._id) return;
-
-    setAckLoading(true);
-
-    await api.post(
-      `/admin/circulars/${viewCircular._id}/acknowledge`
-    );
-
-    localStorage.setItem(
-      "lastSeenCircularId",
-      viewCircular._id
-    );
-
-    setViewCircular(null);
-
-    Swal.fire({
-      icon: "success",
-      title: "Acknowledged",
-      text: "Circular marked as read",
-      timer: 1200,
-      showConfirmButton: false
-    });
-
-  } catch (err) {
-    console.error("Acknowledgement failed", err);
-
-    Swal.fire({
-      icon: "error",
-      title: "Failed",
-      text: "Unable to acknowledge circular"
-    });
-
-  } finally {
-    setAckLoading(false);
-  }
-};
+    // Prevent horizontal layout shift caused by vertical scrollbars appearing/disappearing
+    document.documentElement.style.scrollbarGutter = "stable";
+  }, []);
 
   const logout = async () => {
 
@@ -176,61 +89,76 @@ const [secondsLeft, setSecondsLeft] = useState(WAIT_TIME);
     }
   };
 
-  const NavButton = ({ to, icon, label }) => (
-    <button
-      onClick={() => {
-        navigate(to);
-        setOpen(false);
-      }}
-      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 mx-1 text-sm font-semibold transition md:w-auto
-        ${
-          location.pathname === to
-            ? "bg-[#0b659a] text-white"
-            : "text-gray-700 hover:bg-[#0b659a] hover:text-white"
-        }`}
-    >
-      <span className="inline-flex shrink-0 items-center justify-center">{icon}</span>
-      <span>{label}</span>
-    </button>
-  );
+  const NavButton = ({ to, icon, label }) => {
+    const isActive = activePath === to;
+    
+    return (
+      <button
+        onClick={() => {
+          navigate(to);
+          setOpen(false);
+        }}
+        className={`flex items-center justify-start lg:justify-center gap-3 rounded-2xl px-3 py-2 text-sm font-medium transition-colors duration-200 w-full lg:w-auto
+          ${isActive
+            ? "bg-[#0b659a] text-white shadow-sm"
+            : "text-gray-600 hover:bg-gray-100 hover:text-[#0b659a]"
+          }`}
+      >
+        <span className="inline-flex shrink-0 items-center justify-center">{icon}</span>
+        <span className="whitespace-nowrap">{label}</span>
+      </button>
+    );
+  };
 
   const RoleButtons = () => (
     <>
       {role === "DRIVER" && (
         <>
-          <NavButton to="/driver" icon={<User size={18} />} label="TW Driver Dashboard" />
-          <NavButton to="/driver/engine" icon={<Train size={18} />} label="TW Dashboard" />
+          <NavButton to="/driver" icon={<ShieldUser size={18} />} label="TW Driver Dashboard" />
+          <NavButton to="/driver/engine" icon={<TrainFront size={18} />} label="TW Dashboard" />
           <NavButton to="/driver/daily" icon={<ClipboardList size={18} />} label="Duty Logs" />
           <NavButton to="/driver/abnormalities" icon={<AlertTriangle size={18} />} label="Abnormalities" />
-          <NavButton to="/circulars" icon={<FileText size={18} />} label="Circulars" />
+          <NavButton to="/circulars" icon={<Files size={18} />} label="Circulars" />
         </>
       )}
 
       {role === "DEPOT_MANAGER" && (
         <>
-          <NavButton to="/manager" icon={<Users size={18} />} label="TW Driver Dashboard" />
-          <NavButton to="/manager/engine" icon={<Train size={18} />} label="TW Dashboard" />
-          <NavButton to="/admin/circular-status" icon={<CheckSquare size={18} />} label="Circular Status" />
-          <NavButton to="/circulars" icon={<FileText size={18} />} label="Circulars" />
+          <NavButton to="/manager" icon={<ShieldUser size={18} />} label="TW Driver Dashboard" />
+          <NavButton to="/manager/engine" icon={<TrainFront size={18} />} label="TW Dashboard" />
+          <NavButton to="/admin/circular-status" icon={<ClipboardCheck size={18} />} label="Circular Status" />
+          <NavButton to="/circulars" icon={<Files size={18} />} label="Circulars" />
         </>
       )}
 
       {role === "SUPER_ADMIN" && (
         <>
-          <NavButton to="/admin" icon={<Shield size={18} />} label="TW Driver Dashboard" />
-          <NavButton to="/admin/engine" icon={<Train size={18} />} label="TW Dashboard" />
-          <NavButton to="/admin/circular-upload" icon={<FileText size={18} />} label="Upload Circular" />
-          <NavButton to="/admin/circular-status" icon={<CheckSquare size={18} />} label="Circular Status" />
+          <NavButton to="/admin" icon={<ShieldUser size={18} />} label="TW Driver Dashboard" />
+          <NavButton to="/admin/engine" icon={<TrainFront size={18} />} label="TW Dashboard" />
+          <NavButton to="/admin/circular-upload" icon={<FileUp size={18} />} label="Upload Circular" />
+          <NavButton to="/admin/circular-status" icon={<ClipboardCheck size={18} />} label="Circular Status" />
+          <NavButton to="/circulars" icon={<Files size={18} />} label="Circulars" />
           <NavButton to="/admin/report-download" icon={<ClipboardList size={18} />} label="Reports" />
         </>
       )}
 
       {role === "ADEE" && (
         <>
-          <NavButton to="/adee" icon={<Shield size={18} />} label="TW Driver Dashboard" />
-          <NavButton to="/adee/engine" icon={<Train size={18} />} label="TW Dashboard" />
-          <NavButton to="/admin/circular-status" icon={<CheckSquare size={18} />} label="Circular Status" />
-          <NavButton to="/circulars" icon={<FileText size={18} />} label="Circulars" />
+          <NavButton to="/adee" icon={<ShieldUser size={18} />} label="TW Driver Dashboard" />
+          <NavButton to="/adee/engine" icon={<TrainFront size={18} />} label="TW Dashboard" />
+          <NavButton to="/admin/circular-status" icon={<ClipboardCheck size={18} />} label="Circular Status" />
+          <NavButton to="/circulars" icon={<Files size={18} />} label="Circulars" />
+        </>
+      )}
+
+      {role === "MASTER_ADMIN" && (
+        <>
+          <NavButton to="/master-admin" icon={<Crown size={18} />} label="Master Admin" />
+          <NavButton to="/admin" icon={<Shield size={18} />} label="Super Admin Dashboard" />
+          <NavButton to="/admin/engine" icon={<TrainFront size={18} />} label="TW Dashboard" />
+          <NavButton to="/admin/circular-status" icon={<ClipboardCheck size={18} />} label="Circular Status" />
+          <NavButton to="/circulars" icon={<Files size={18} />} label="Circulars" />
+          <NavButton to="/admin/report-download" icon={<ClipboardList size={18} />} label="Reports" />
         </>
       )}
     </>
@@ -238,39 +166,44 @@ const [secondsLeft, setSecondsLeft] = useState(WAIT_TIME);
 
   return (
     <>
-      <nav className="bg-white shadow-md z-20 sticky py-2 top-0 ">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+      <nav className="bg-white shadow-md z-20 sticky top-0 w-full">
+        <div className="w-full px-2 md:px-4 lg:px-4 xl:px-6">
+          <div className="flex items-center justify-between min-h-[4rem] py-2 gap-2 lg:gap-3 xl:gap-4 min-w-0">
 
-            <div className="flex items-center gap-2">
-              <Train className="text-[#0b659a]" />
-              <span className="font-bold text-sm md:text-lg text-gray-800">
-                Tower Wagon Driver Management system
+            {/* Brand/Logo Zone (Start) */}
+            <div className="flex items-center justify-start gap-3 flex-shrink-0">
+              <img
+                src="/app-logo.png"
+                alt="Tower Wagon Train Logo"
+                className="h-10 sm:h-12 w-auto object-contain flex-shrink-0"
+              />
+              <span className="font-bold text-sm lg:text-base leading-tight text-gray-900 tracking-tight break-words">
+                Tower wagon & Driver Management system
               </span>
             </div>
 
-            {/* Desktop Menu */}
-            <div className="hidden flex-1 items-center justify-center md:flex">
-              <div className="flex items-center gap-1">
+            {/* Primary Navigation Zone (Center) */}
+            <div className="hidden lg:flex flex-1 items-center justify-center px-1 lg:px-2 min-w-0">
+              <div className="flex items-center gap-1.5 xl:gap-2 max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 <RoleButtons />
               </div>
             </div>
 
-            {/* Desktop Logout */}
-            <div className="hidden md:block">
+            {/* Action Zone (End) */}
+            <div className="hidden lg:flex flex-shrink-0 justify-end">
               <button
                 onClick={logout}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#C8102E] transition hover:bg-red-50"
+                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-600 hover:text-white"
               >
                 <LogOut size={18} />
-                Logout
+                <span className="whitespace-nowrap">Logout</span>
               </button>
             </div>
 
             {/* Mobile Toggle */}
             <button
               onClick={() => setOpen(!open)}
-              className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-[#0b659a] hover:text-white transition"
+              className="lg:hidden flex-shrink-0 p-2 rounded-lg text-gray-700 hover:bg-[#0b659a]/10 hover:text-[#0b659a] transition-colors duration-200"
             >
               {open ? <X /> : <Menu />}
             </button>
@@ -279,12 +212,12 @@ const [secondsLeft, setSecondsLeft] = useState(WAIT_TIME);
 
         {/* Mobile Menu */}
         {open && (
-          <div className="border-t border-[#E5E7EB] bg-white px-4 py-3 shadow-lg md:hidden">
-            <div className="space-y-1">
+          <div className="border-t border-[#E5E7EB] bg-white px-4 py-3 shadow-lg lg:hidden w-full overflow-y-auto max-h-[calc(100vh-64px)]">
+            <div className="flex flex-col space-y-1">
               <RoleButtons />
               <button
                 onClick={logout}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-[#C8102E] transition hover:bg-red-50"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-red-600 transition-all duration-200 hover:bg-red-600 hover:text-white mt-2"
               >
                 <span className="inline-flex shrink-0 items-center justify-center">
                   <LogOut size={18} />
@@ -295,50 +228,6 @@ const [secondsLeft, setSecondsLeft] = useState(WAIT_TIME);
           </div>
         )}
       </nav>
-
-      {/* PDF VIEW MODAL */}
-      {viewCircular && (
-        <div className="fixed inset-0 bg-black/50 z-[999] flex items-center justify-center p-2">
-          <div className="bg-white w-full mx-6 max-w-5xl h-[80vh] rounded-xl shadow-lg overflow-hidden">
-            <div className="flex items-center justify-between p-3 md:p-4 border-b">
-              <p className="font-medium text-sm md:text-base truncate">
-                {viewCircular.title}
-              </p>
-              <button onClick={() => setViewCircular(null)}>
-                <X />
-              </button>
-            </div>
-
-            <div className="h-[calc(100%-120px)]">
-  <Worker workerUrl={PDFJS_WORKER_URL}>
-    <Viewer
-      fileUrl={viewCircular.pdfUrl}
-      defaultScale={SpecialZoomLevel.PageFit}
-    />
-  </Worker>
-</div>
-
-<div className="border-t p-4 flex justify-end bg-white">
-  <button
-  onClick={acknowledgeCircular}
-  disabled={ackLoading || secondsLeft > 0}
-  className={`px-5 py-2 rounded-lg font-medium text-white transition
-    ${
-      ackLoading || secondsLeft > 0
-        ? "bg-gray-400 cursor-not-allowed"
-        : "bg-emerald-600 hover:bg-emerald-700"
-    }`}
->
-  {ackLoading
-    ? "Processing..."
-    : secondsLeft > 0
-    ? `Wait ${secondsLeft}s`
-    : "I Acknowledge"}
-</button>
-</div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
