@@ -140,7 +140,7 @@ export default function DriverHealth() {
   return (
     <>
       <div className="rail-page">
-        <div className="mx-auto max-w-5xl">
+        <div>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-3">

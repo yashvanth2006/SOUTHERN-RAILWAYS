@@ -129,13 +129,12 @@ export default function AdminReportDownload() {
 
   return (
     <>
-
-      <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-7xl mx-auto space-y-6">
+      <div className="space-y-6">
         <BackButton />
         
         {/* ================= HEADER ================= */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="flex items-center gap-4 min-w-0">
             <div className="p-3 bg-slate-100 rounded-xl text-[#0b659a] flex-shrink-0">
               <ClipboardList size={28} />
             </div>
@@ -151,7 +150,7 @@ export default function AdminReportDownload() {
         </div>
 
         {/* ================= FILTERS CARD ================= */}
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm max-w-4xl mx-auto">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
           {/* FILTERS */}
           <div className="space-y-5">
 

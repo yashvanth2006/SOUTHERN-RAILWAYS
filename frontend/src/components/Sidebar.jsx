@@ -110,7 +110,7 @@ export default function Sidebar({ setSidebarOpen }) {
             className="h-10 sm:h-12 w-auto object-contain shrink-0"
           />
           <span className="font-bold text-sm leading-tight text-slate-800 break-words text-left">
-            Tower wagon & Driver Management system
+            TOWER WAGON
           </span>
         </div>
 

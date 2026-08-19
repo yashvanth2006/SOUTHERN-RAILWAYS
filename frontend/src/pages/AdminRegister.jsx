@@ -95,19 +95,15 @@ export default function AdminRegister() {
 
       <div className="min-h-screen bg-slate-100 px-4 py-6">
 
-        <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        <div className="mb-6">
           <BackButton />
-
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-2">
-              <div className="p-3 rounded-full bg-[#0b659a]/10">
-                <UserPlus className="text-[#0b659a]" />
-              </div>
-            </div>
-            <h2 className="text-xl font-bold text-gray-800">
-              Register
-            </h2>
+          <div className="mt-6">
+            <h1 className="text-2xl font-bold text-slate-800">Add New User</h1>
+            <p className="text-sm text-slate-500 mt-1">Create and assign a new user account to the railway management system.</p>
           </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
 
           <div className="space-y-5">
 

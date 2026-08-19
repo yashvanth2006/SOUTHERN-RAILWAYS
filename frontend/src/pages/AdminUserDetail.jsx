@@ -173,7 +173,7 @@ export default function AdminUserDetail() {
   return (
     <>
       <div className="rail-page">
-        <div className="mx-auto max-w-5xl space-y-6">
+        <div className="space-y-6">
 
           {/* Header with Back and Edit buttons */}
           <div className="flex items-center justify-between">

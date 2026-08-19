@@ -68,7 +68,7 @@ export default function DriverAbnormality() {
   return (
     <>
       <div className="rail-page">
-        <div className="mx-auto max-w-6xl space-y-6">
+        <div className="space-y-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-3">

@@ -257,7 +257,7 @@ export default function MasterAdminDashboard() {
         <div className="max-w-7xl mx-auto space-y-8">
           
           {/* ================= HEADER ================= */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex items-center gap-4 min-w-0">
               <div className="p-3.5 bg-amber-50 text-amber-600 rounded-2xl border border-amber-100 flex-shrink-0">
                 <Crown size={32} />

@@ -29,19 +29,6 @@ textarea {
 .rail-page {
   min-height: 100vh;
   background: transparent;
-  padding: 1rem;
-}
-
-@media (min-width: 640px) {
-  .rail-page {
-    padding: 1.5rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .rail-page {
-    padding: 2rem;
-  }
 }
 
 .rail-card {

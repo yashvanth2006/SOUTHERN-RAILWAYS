@@ -80,7 +80,7 @@ export default function DriverProfile() {
   return (
     <>
       <div className="rail-page">
-        <div className="mx-auto max-w-4xl">
+        <div>
           <div className="mb-6 flex flex-col gap-3">
             <div className="space-y-2">
               <div className="flex items-center gap-3">

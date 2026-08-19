@@ -178,7 +178,7 @@ export default function Navbar() {
                 className="h-10 sm:h-12 w-auto object-contain flex-shrink-0"
               />
               <span className="font-bold text-sm lg:text-base leading-tight text-gray-900 tracking-tight break-words">
-                Tower wagon & Driver Management system
+                TOWER WAGON
               </span>
             </div>
 

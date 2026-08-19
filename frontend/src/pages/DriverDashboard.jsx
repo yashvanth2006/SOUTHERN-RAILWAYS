@@ -78,7 +78,7 @@ export default function DriverDashboard() {
   return (
     <>
       <div className="rail-page">
-        <div className="mx-auto max-w-7xl">
+        <div>
           <div className="mb-8 flex flex-col gap-2">
             <div>
               <p className="text-lg font-medium text-slate-600 mb-1">Hi, {localStorage.getItem("userName") || "User"}!</p>

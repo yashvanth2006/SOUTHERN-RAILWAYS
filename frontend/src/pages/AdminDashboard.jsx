@@ -27,7 +27,8 @@ import {
   XCircle,
   Building2,
   Loader2,
-  CalendarDays
+  CalendarDays,
+  X
 } from "lucide-react";
 
 import ResponsiveSection from "../components/ResponsiveSection";
@@ -72,6 +73,28 @@ export default function AdminDashboard() {
   const [editUserId, setEditUserId] = useState(null);
   const [circularPendings, setCircularPendings] = useState(0);
   const navigate = useNavigate();
+
+  // --- Universal Search State ---
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    
+    // Combine all users and add a 'roleLabel' for the UI
+    const allUsers = [
+      ...managers.map(u => ({ ...u, roleLabel: "SSE/TRD" })),
+      ...miniAdmins.map(u => ({ ...u, roleLabel: "ADEE" })),
+      ...drivers.map(u => ({ ...u, roleLabel: "Driver" }))
+    ];
+    
+    return allUsers.filter(u => 
+      (u.name && u.name.toLowerCase().includes(query)) ||
+      (u.pfNo && u.pfNo.toLowerCase().includes(query)) ||
+      (u.hrmsId && u.hrmsId.toLowerCase().includes(query))
+    ).slice(0, 15);
+  }, [searchQuery, managers, miniAdmins, drivers]);
 
   /* ================= OVERDUE SUMMARY ================= */
 
@@ -378,15 +401,98 @@ export default function AdminDashboard() {
             </div>
 
             {/* RIGHT */}
-            <div className="flex items-center gap-3 self-end lg:self-auto">
+            <div className="flex items-center gap-3 self-end lg:self-auto relative">
+
+              {/* UNIVERSAL SEARCH (Super Admin only) */}
+              {!isADEE && (
+                <div className="flex items-center">
+                  {isSearchOpen ? (
+                    <div className="flex items-center bg-white border border-slate-200 rounded-xl px-3 py-2.5 shadow-sm w-[calc(100vw-3rem)] sm:w-64 md:w-80 absolute right-0 top-0 sm:relative z-50">
+                      <Search size={18} className="text-slate-400 mr-2 shrink-0" />
+                      <input 
+                        autoFocus
+                        type="text"
+                        placeholder="Search Name, PF, or HRMS ID..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full focus:outline-none text-sm bg-transparent font-medium text-slate-700"
+                      />
+                      <button onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }} className="text-slate-400 hover:text-slate-600 p-1 shrink-0">
+                        <X size={16} />
+                      </button>
+                      
+                      {/* DROPDOWN */}
+                      {searchQuery.trim() && (
+                        <div className="absolute top-full mt-2 right-0 w-full sm:w-[350px] bg-white shadow-xl border border-slate-100 rounded-xl overflow-hidden z-50">
+                          {searchResults.length > 0 ? (
+                            <div className="max-h-80 overflow-y-auto">
+                              {searchResults.map(user => (
+                                <div key={user._id} className="p-3 border-b border-slate-50 hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                  <div className="min-w-0 pr-2">
+                                    <p className="text-sm font-semibold text-slate-800 truncate">{user.name}</p>
+                                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                      <span className="font-mono bg-slate-100 px-1.5 rounded">{user.pfNo || "-"}</span>
+                                      <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0"></span>
+                                      <span className="truncate">{user.roleLabel} • {user.depotName || "N/A"}</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-1 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                                    <button 
+                                      onClick={() => {
+                                        setIsSearchOpen(false);
+                                        setSearchQuery("");
+                                        if (user.roleLabel === 'Driver') viewDriverDetails(user._id);
+                                        else if (user.roleLabel === 'ADEE') viewMiniAdminDetails(user._id);
+                                        else viewManagerDetails(user._id);
+                                      }}
+                                      className="p-1.5 text-[#0b659a] hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100"
+                                      title="View Details"
+                                    >
+                                      <Eye size={16} />
+                                    </button>
+                                    <button 
+                                      onClick={() => {
+                                        setIsSearchOpen(false);
+                                        setSearchQuery("");
+                                        setEditUserId(user._id);
+                                      }}
+                                      className="p-1.5 text-[#0b659a] hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100"
+                                      title="Edit User"
+                                    >
+                                      <Pencil size={16} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="p-4 text-center text-sm text-slate-500">
+                              No users found matching "{searchQuery}"
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setIsSearchOpen(true)}
+                      className="p-2.5 bg-white text-slate-600 hover:text-[#0b659a] hover:bg-blue-50 border border-slate-200 rounded-xl shadow-sm transition-colors"
+                      title="Universal Search"
+                    >
+                      <Search size={20} />
+                    </button>
+                  )}
+                </div>
+              )}
 
               {!isADEE && (
                 <button
                   onClick={() => navigate("/admin/register")}
-                  className="bg-[#0b659a] hover:bg-[#0f82c5] text-white rounded-xl px-5 py-2.5 flex items-center gap-2 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
+                  className="bg-[#0b659a] hover:bg-[#0f82c5] text-white rounded-xl px-4 sm:px-5 py-2.5 flex items-center gap-2 transition-all duration-200 shadow-sm hover:shadow-md font-medium shrink-0"
                 >
                   <UserPlus size={18} />
-                  Add User
+                  <span className="hidden sm:inline">Add User</span>
+                  <span className="sm:hidden">Add</span>
                 </button>
               )}
             </div>

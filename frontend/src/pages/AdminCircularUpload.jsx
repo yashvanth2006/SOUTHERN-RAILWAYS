@@ -38,13 +38,12 @@ export default function AdminCircularUpload() {
 
   return (
     <>
-
-      <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-7xl mx-auto space-y-6">
+      <div className="space-y-6">
         <BackButton />
         
         {/* ================= HEADER ================= */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="flex items-center gap-4 min-w-0">
             <div className="p-3 bg-slate-100 rounded-xl text-[#0b659a] flex-shrink-0">
               <FileUp size={28} />
             </div>
@@ -60,7 +59,7 @@ export default function AdminCircularUpload() {
         </div>
 
         {/* ================= FORM CARD ================= */}
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm max-w-3xl mx-auto">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
           {/* TITLE INPUT */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 mb-1">

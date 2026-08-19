@@ -173,13 +173,10 @@ export default function CircularList() {
 
   return (
     <>
-
-      <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-7xl mx-auto space-y-6">
+      <div className="space-y-6">
         <BackButton />
           {/* ================= HEADER ================= */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-6 rounded-2xl shadow-sm">
-            {/* LEFT */}
-            
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-slate-100 rounded-xl text-[#0b659a] flex-shrink-0">
@@ -198,14 +195,14 @@ export default function CircularList() {
           </div>
 
           {loading && (
-            <div className="bg-white py-16 rounded-2xl shadow-sm flex flex-col items-center justify-center text-slate-500 max-w-4xl mx-auto w-full">
+            <div className="bg-white py-16 rounded-2xl shadow-sm flex flex-col items-center justify-center text-slate-500 w-full">
               <Loader2 size={36} className="animate-spin mb-4 text-[#0b659a]" />
               <p className="font-medium text-lg">Loading circulars...</p>
             </div>
           )}
 
           {!loading && circulars.length === 0 && (
-            <div className="bg-white py-16 rounded-2xl shadow-sm text-center text-slate-500 flex flex-col items-center max-w-4xl mx-auto w-full">
+            <div className="bg-white py-16 rounded-2xl shadow-sm text-center text-slate-500 flex flex-col items-center w-full">
               <div className="p-4 bg-slate-50 rounded-full mb-4">
                 <FileText size={48} className="text-slate-300" />
               </div>
@@ -213,7 +210,7 @@ export default function CircularList() {
             </div>
           )}
 
-          <div className="space-y-4 max-w-4xl mx-auto w-full">
+          <div className="space-y-4 w-full">
             {circulars.map((c) => (
               <div
                 key={c._id}
@@ -290,7 +287,7 @@ export default function CircularList() {
 
       {selectedCircular && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3">
-          <div ref={viewerContainerRef} className="h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl flex flex-col">
+          <div ref={viewerContainerRef} className="h-[90vh] w-full overflow-hidden rounded-2xl bg-white shadow-2xl flex flex-col">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#D1D5DB] p-3 sm:p-4 bg-white z-10 shrink-0 gap-3 sm:gap-0">
               <p className="font-semibold text-[#1F2937] truncate w-full sm:w-auto pr-4 text-sm sm:text-base">{selectedCircular.title}</p>
               <div className="flex items-center justify-end w-full sm:w-auto gap-1 sm:gap-2">

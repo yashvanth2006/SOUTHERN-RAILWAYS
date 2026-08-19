@@ -42,7 +42,7 @@ export default function Layout() {
           <header className="lg:hidden sticky top-0 flex items-center justify-between h-16 px-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-30">
             <div className="flex items-center gap-3">
               <img src="/app-logo.png" alt="Logo" className="h-8 w-auto object-contain" />
-              <span className="font-bold text-sm leading-tight text-slate-800 break-words text-left">Tower wagon & Driver Management system</span>
+              <span className="font-bold text-sm leading-tight text-slate-800 break-words text-left">TOWER WAGON</span>
             </div>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -53,7 +53,7 @@ export default function Layout() {
           </header>
 
           {/* Page Content Outlet */}
-          <main className="flex-1 relative">
+          <main className="flex-1 relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <Outlet />
           </main>
 
