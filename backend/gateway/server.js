@@ -35,6 +35,11 @@ const reportingProxy = createProxyMiddleware({
   changeOrigin: true,
 });
 
+// Health check endpoint (MUST be above catch-all middleware)
+app.get('/health', (req, res) => {
+  res.json({ status: 'Gateway is running', activeServices: 4, monolithInactive: true });
+});
+
 // Phase 2 & 3 routing: route to respective microservices without stripping paths
 app.use((req, res, next) => {
   const identityPaths = [
@@ -78,10 +83,6 @@ app.use((req, res, next) => {
 });
 
 // app.use('/uploads', monolithProxy); // Disabled for Phase 5
-
-app.get('/health', (req, res) => {
-  res.json({ status: 'Gateway is running', activeServices: 4, monolithInactive: true });
-});
 
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);
