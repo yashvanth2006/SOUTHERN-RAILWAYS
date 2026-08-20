@@ -103,10 +103,20 @@ export default function Login() {
       }
     } catch (err) {
        console.error("LOGIN ERROR:", err);
+       
+       let errorMessage = err.response?.data?.msg || "Invalid PF Number or Password";
+       
+       // Explicitly handle 429 Too Many Requests (Rate Limiting)
+       if (err.response?.status === 429) {
+         errorMessage = "Too many login attempts. Please wait a few minutes and try again.";
+       } else if (err.message === "Network Error" || err.code === "ERR_NETWORK") {
+         errorMessage = "Network error. Please check your internet connection.";
+       }
+
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: err.response?.data?.msg || "Invalid PF Number or Password",
+        text: errorMessage,
         confirmButtonColor: "#dc2626",
       });
     } finally {
