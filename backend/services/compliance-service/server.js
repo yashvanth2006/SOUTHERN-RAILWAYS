@@ -20,6 +20,10 @@ app.use('/abnormalities', abnormalityRoutes);
 app.use('/issues', issueRoutes);
 app.use('/admin', adminCircularRoutes);
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'Compliance Service is running' });
+});
+
 const PORT = process.env.COMPLIANCE_PORT || 3004;
 app.listen(PORT, () => {
   console.log(`Compliance Service running on port ${PORT}`);

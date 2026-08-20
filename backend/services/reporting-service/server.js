@@ -16,6 +16,10 @@ connectDB();
 
 app.use('/admin', adminRoutes);
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'Reporting Service is running' });
+});
+
 const PORT = process.env.REPORTING_PORT || 3005;
 app.listen(PORT, () => {
   console.log(`Reporting Service running on port ${PORT}`);

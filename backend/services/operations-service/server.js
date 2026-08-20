@@ -20,6 +20,10 @@ app.use('/driver', driverRoutes);
 app.use('/engine', engineRoutes);
 app.use('/depot', depotRoutes);
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'Operations Service is running' });
+});
+
 const PORT = process.env.OPERATIONS_PORT || 3003;
 app.listen(PORT, () => {
   console.log(`Operations Service running on port ${PORT}`);

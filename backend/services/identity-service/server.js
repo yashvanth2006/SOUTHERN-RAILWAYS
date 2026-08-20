@@ -21,6 +21,10 @@ connectDB();
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'Identity Service is running' });
+});
+
 // Section 2: Cross-Service Authorization Pattern Internal Endpoint
 const verifyInternalSecret = (req, res, next) => {
   const secret = req.headers['x-internal-secret'];
